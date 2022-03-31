@@ -1,0 +1,24 @@
+We have not received enough questions on the product to construct a FAQ
+document, but here are a few of clarifications based on questions so far:
+
+1. In VMS DCL the delete (DEL) key is used to delete characters to the left
+when editing a line.  The control-H character is used to go to the beginning
+of the input line.  If you are not using an actual Digital VTxxx (VT320,
+ VT420, etc.) terminal, your terminal emulation may be sending a control-H
+(backspace) instead of a DEL code for the "left arrow" key which is
+two rows above the ENTER or RETURN key.  In Open DCL Lite we check to
+see if the "erase" character has been set to control-H by the "stty" command,
+and if so we map the control-H code to the same behavior as the DEL code.
+If you expect a character to be deleted to the left but instead the cursor
+jumps to the beginning of the line, you should change your terminal emulation
+to send a DEL code or you should use the Unix/Linux stty command to change
+the "erase" character.
+
+2. The Open DCL Lite command line processor maps command lines to lower
+case, with the exception of text enclosed in quotation marks ("").  If you
+wish to specify a file or directory which has upper case characters you
+must surround the file specification with quotation marks (e.g. "[.Mail]").
+
+3. Open DCL Lite does not come with any official support, but please report
+problems with the software to support@accelr8.com.  We cannot guarantee
+a fix, but reports will be taken into account for future releases.

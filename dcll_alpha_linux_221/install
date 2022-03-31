@@ -1,0 +1,97 @@
+#! /bin/sh
+tmp=`echo -n abc|wc -c`
+if [ $tmp -eq 3 ]
+then
+   EARG=-n
+   EAFT=
+else
+   EARG=
+   EAFT="\c"
+fi
+if [ "$1" != "rerun" ]
+then
+    echo "Open DCL Lite"
+    echo "Copyright 2001 Accelr8 Technology Corporation"
+    echo " "
+fi
+echo "The default location for installation of this software is /opt/accelr8."
+echo "To use this default, please press return or enter to continue."
+echo $EARG "Otherwise, specify an alternate location here: $EAFT"
+read instpath
+if [ "$instpath" = "" ]
+then
+    mkdir /opt 2>/dev/null
+    mkdir /opt/accelr8 2>/dev/null
+    instpath=/opt/accelr8
+    if [ ! -d /opt/accelr8 ]
+    then
+        echo "Error - cannot create directory /opt/accelr8."
+        echo "This is probably a permission problem."
+        echo "Please run this script again, specifying a location"
+        echo "writable by you."
+    fi
+elif [ ! -d $instpath ]
+then
+    echo $EARG "Directory $instpath does not exist.  Do you want to create it? [Y/n] $EAFT"
+    read yesno
+    yn=`echo $yesno | cut -c1`
+    if [ "$yn" = "n" -o "$yn" = "N" ]
+    then
+        echo "Please select another location."
+        echo " "
+        exec $0 rerun
+    fi
+# mkdir -p may not exist on some platforms
+    mkdir -p $instpath 2>/dev/null
+    if [ ! -d $instpath ]
+    then
+        mkdir $instpath
+        if [ ! -d $instpath ]
+        then
+            echo "Failed to create directory $instpath.  Please try again."
+            echo " "
+            exec $0 rerun
+        fi
+    fi
+fi
+cp LICENSE* README* NOTES dcll *.dat *.hlb $instpath/.
+rm dcll *.dat *.hlb install
+if [ ! -f $instpath/dcll ]
+then
+    echo "Copying failed.  Please correct the reason for failure and try again."
+    exit 0
+fi
+echo " "
+echo "Open DCL Lite is now installed.  You should add the installation directory"
+echo "to your PATH environment variable or create a symbolic link to the"
+echo "dcll command in a directory already included in the PATH."
+echo " "
+echo "Would you like to the installation script to create the symbolic link"
+echo $EARG "for you? [Y/n] $EAFT"
+read yesno
+yn=`echo $yesno | cut -c1`
+if [ "$yn" != "n" -a "$yn" != "N" ]
+then
+    LOOP="yes"
+    while [ "$LOOP" = "yes" ]
+    do
+        echo " "
+        echo "The default location for the symbolic link is /usr/local/bin."
+        echo "To use this default, please press return or enter to continue."
+        echo $EARG "Otherwise, specify an alternate location here: $EAFT"
+        read linkpath
+        if [ "$linkpath" = "" ]
+        then
+            rm -f /usr/local/bin/dcll
+            ln -s $instpath/dcll /usr/local/bin/dcll
+            LOOP="no"
+        elif [ ! -d $linkpath ]
+        then
+            echo "Directory $linkpath does not exist.  Please try again."
+        else
+            rm -f $linkpath/dcll
+            ln -s $instpath/dcll $linkpath/dcll
+            LOOP="no"
+        fi
+    done
+fi

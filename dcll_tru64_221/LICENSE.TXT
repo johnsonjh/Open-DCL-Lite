@@ -1,0 +1,72 @@
+Open DCL Lite License Agreement
+
+NOTICE: PLEASE READ THIS BEFORE INSTALLING THE SOFTWARE.  ANY USE
+OF THIS SOFTWARE WILL MEAN THAT YOU AGREE TO BE BOUND BY THE TERMS OF
+THIS LICENSE AGREEMENT.
+
+LICENSE:  The software you are about to download or install ("Software") is
+licensed, not given, to you.  Accelr8 provides this Software without charge.
+Subject to the terms of this Agreement, you have a non-exclusive right to
+use the Software.  You may freely distribute the Software so long as it is
+accompanied with this License.  You also may not reverse engineer, decompile,
+disassemble or otherwise tamper with the Software.  Please contact Accelr8
+Technology Corporation ("Accelr8") regarding interoperability.
+
+COPYRIGHT AND TRADEMARK.  The Software is copyrighted to Accelr8 Technology
+Corporation.  The software name is a trademark of Accelr8.  Accelr8 at all
+times retains all rights, title and interest in the Software, regardless of
+the media in which the Software exists.  This license is not a sale or
+transfer of ownership of the original or any subsequent copy.
+
+TERM.  This license is effective until terminated.  This license may be
+terminated by the destruction of the Software or upon your failure to
+comply with its terms and conditions.  The Software and all related
+documentation are to be destroyed upon termination.
+
+DISCLAIMER OF WARRANTY.  TO THE MAXIMUM EXTENT PERMITTED BY LAW, ACCELR8
+PROVIDES THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND EITHER EXPRESS,
+IMPLIED OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, ANY WARRANTIES OF
+MERCHANTABILITY, NONINFRINGEMENT OR FITNESS FOR A PARTICULAR PURPOSE.
+Accelr8 does not warrant that the Software is error-free or that its
+operations will be uninterrupted or be compatible with your computer or
+its operating system.  Should the Software prove defective, Accelr8 will
+not assume any cost of service or repair.  This disclaimer of warranty
+constitutes an essential and material part of this Agreement.
+
+LIMITATION OF REMEDIES: TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO
+EVENT SHALL ACCELR8 BE LIABLE FOR ANY DAMAGES ARISING FROM OR RELATED
+TO THE SOFTWARE.
+
+EXPORT CONTROLS:  The Software and its underlying technology may not be
+downloaded to or otherwise exported or re-exported (1) into any country in
+which the U.S. has embargoed goods, (2) to a national or resident of any
+country in which the U.S. has embargoed goods, or (3) to anyone on the U.S.
+Treasury Department's list of Specially Designated Nationals or the U.S.
+Commerce Department's Table of Denial Orders; or in any other situation
+prohibited by U.S. law or regulation.  Your downloading of the Software
+is your representation, warranty and agreement to indemnify Accelr8 that
+you are not located in, under the control of, or a national or resident of
+any such country on the aforementioned lists.
+
+MISCELLANEOUS:  The governing version of this Agreement is in the English
+language; you hereby waive any right to have the terms of this Agreement
+governed by any other language. (La version qui regit cet accord est en
+anglais, par le present acte vous renouncez au droit d' avior les termes de
+cet accord regis dans une langue autre que l'anglais). The laws of the State
+of Colorado shall govern this Agreement without regard to the conflict of
+laws provisions.  Any dispute that cannot be resolved that the parties
+hereto cannot resolve shall be resolved by binding arbitration in Denver,
+Colorado by a sole arbitrator, in English, under the Commercial Arbitration
+Rules of the American Arbitration Association.  The United Nations Convention
+for Contracts for the International Sale of Goods shall not apply to this
+Agreement.  This Agreement may not be assigned without the prior written
+consent of Accelr8.  Such consent shall not be unreasonably withheld.  You
+agree that this License is the exclusive statement of the Agreement and
+supersedes any proposal or prior Agreement, oral or written, and any other
+communication relating to the subject matter of this Agreement.  Any changes
+to this Agreement must be in a mutually signed writing.  Any waiver of any
+term or condition of this Agreement shall not be deemed a waiver of any
+other term or condition.  Any term or condition that a judicial or
+adjudicative body determines to be legally invalid shall be interpreted
+so as to give effect to the meaning and intent of said term.
+

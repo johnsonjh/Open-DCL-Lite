@@ -1,0 +1,4 @@
+The MIPS ABI version of Open DCL Lite has been compiled and tested on
+SGI IRIX 5.3 using the MIPS ABI development environment.  Accelr8 cannot
+guarantee that the software will work on other MIPS ABI compliant platforms,
+but there is a reasonably good chance that it will.

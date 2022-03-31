@@ -1,0 +1,7 @@
+The current version of Open DCL Lite has been compiled and linked in
+accordance with guidelines of the Linux Development Platform Specification
+from www.freestandards.org.
+
+PLEASE NOTE: This version of Open DCL Lite requires a C library (glibc)
+             version of at least 2.1.3.
+

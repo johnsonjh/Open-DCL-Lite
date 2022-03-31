@@ -1,0 +1,4158 @@
+!<arch>
+accelr8/        914018427   128   100   100664  676       `
+1  Accelr8
+
+   Open DCL Lite was developed by Accelr8 Technology Corporation as a
+   way to increase awareness of its commercial Open DCL product and other
+   migration software.  Open DCL supports a much larger set of DCL commands
+   and lexical functions, systemwide logical names, indexed files, and more.
+
+   If you need to move applications and users from VMS to either Unix or NT,
+   Accelr8 can provide the tools and the expertise to get you there.
+
+   To contact Accelr8:
+
+   WWW: http://www.accelr8.com         E-mail: info@accelr8.com
+   Phone: 303-863-8088
+   Mail: Accelr8 Technology Corporation
+         303 E. 17th Ave., Suite 108
+         Denver, CO 80203 USA
+
+append/         914018427   128   100   100664  3015      `
+1  APPEND
+
+   The APPEND command concatenates a file or files to the end of
+   the data in the output file.  If a field is omitted from the output 
+   spec or specified as a "*" wildcard, the corresponding field from the 
+   input spec is used.
+
+   Format
+
+     APPEND input-spec[,...] output-spec
+
+2  Parameters
+
+ input-spec[,...]
+   The names of one or more files that will be appended.  If more than
+   one file is used than the files are appended to the output file in the 
+   order specified. Separate the file with a comma (,).
+
+ output-spec
+   The name of the file that the input files will be appended to.  
+
+2  Qualifiers
+
+/BEFORE
+
+      /BEFORE[=date]
+       
+   Specifies that only files dated earlier than the given time should
+   be selected.  The default is TODAY.
+
+/BY_OWNER
+
+      /BY_OWNER[=uic]
+
+   Specifies that only files owned by a particular user should be
+   selected.  The default is the UIC of the current user.
+
+/CONFIRM
+
+      /CONFIRM
+      /NOCONFIRM (default)
+
+   This qualifier causes the APPEND command to prompt the user
+   to confirm the action for each file matching the spec.  Affirmative
+   responses are YES, TRUE, and 1.  Negative responses are NO, FALSE,
+   0, the ctrl-Z key, and pressing return.  Specifying ALL will suppress
+   the confirmation prompt for all remaining files.
+
+/CREATED
+
+      /CREATED (default)
+
+   Specifies that the creation (status changed) date should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/EXCLUDE
+
+      /EXCLUDE=(filespec[,...])
+
+   Specifies that files matching the given filespec(s) should not
+   be selected.
+
+/LOG
+
+      /LOG
+      /NOLOG (default)
+       
+   Controls whether an informational message is displayed for each file
+   as it is appended.
+
+/MODIFIED
+
+   Specifies that the date of last modification should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/NEW_VERSION
+
+      /NEW_VERSION
+      /NONEW_VERSION (default)
+       
+   Specifies whether APPEND should create a new file if the output
+   specification does not name an existing file.  The default,
+   /NONEW_VERSION, assumes that the file specified in output-spec
+   already exists, and it is an error if it does not.
+
+/PROTECTION
+
+      /PROTECTION=(prot-code)
+
+   Specifies the protection to give the file.  The default is to
+   retain the current protection for an existing file, and
+   to use the user's default protection string otherwise.
+
+/SINCE
+
+      /SINCE[=date]
+
+   Specifies that only files dated later than the given time should
+   be selected.  The default is TODAY.
+
+2 Examples
+
+  1.  $ APPEND accelr8.1 accelr8.2
+
+    The APPEND command concatenates the data in the file accelr8.1 at
+    the end of the file accelr8.2.
+
+2 Implementation_Differences
+
+  The /CREATED qualifier selects by the date of last status change,
+  not creation.  UNIX does not store creation dates.
+
+assign/         914018427   128   100   100664  3396      `
+1  ASSIGN
+
+   The ASSIGN command allows the user to associate or  reassociate one 
+   or more equivalence strings with a logical name.  This command is 
+   equivalent to the DEFINE command, but the parameters are in the 
+   opposite order.
+
+   Format:
+     
+     ASSIGN equivalence-name[,...] logical-name
+
+2  Parameters
+
+ equivalence-name[,...]
+   A string from 1 to 255 characters.  Can be a file specification, 
+   device name, or logical name. If the string has uppercase letters,
+   a dollar sign {$}, or underscore {_} characters, put double quotes
+   around the string {" "}.  {""}, denotes a double quote within a 
+   string.
+
+   If the equivalence name is going to be a file specification, use
+   the colons {:}, brackets {[]}, and periods {.} that would normally
+   be required.
+
+   When more than one equivalence name is used for a logical name,
+   you create a search list.  For more information, see the VMS DCL
+   manual.
+
+ logical-name
+   A string from 1 to 255 characters.  The logical name is used to 
+   represent the equivalence name in the logical name tables. The 
+   same {$,_," ",""} rules apply to the logical-name.
+
+   If the logical-name is terminated with a colon, the system removes
+   it before the string is placed in the logical name table. If the
+   name is being put in the process directory (LNM$PROCESS_DIRECTORY), or 
+   system directory (LNM$SYSTEM_DIRECTORY) the name may only have up to 31
+   characters.  By default, logical names are put in the process
+   logical name table.
+
+2  Qualifiers
+
+/JOB
+
+   Specifies that the logical name is to be defined in the job
+   logical name table. Other processes in the same job tree and
+   access the logical name.  /JOB equivalent to /TABLE=LNM$JOB.
+
+/LOG
+
+      /LOG (default)
+      /NOLOG
+
+   Controls whether an informational message is displayed when a
+   logical name is redefined.
+
+/PROCESS
+
+      /PROCESS (default)
+
+   Specifies that the logical name is to be defined in the process
+   logical name table. /PROCESS equivalent to /TABLE=LNM$PROCESS.
+
+/SUPERVISOR_MODE
+
+      /SUPERVISOR_MODE (default)
+
+   Specifies that the access mode of the logical name should
+   be SUPERVISOR.  This qualifier is currently ignored.
+
+/TABLE
+
+      /TABLE=table-name
+
+   Specifies a user-supplied table name where the logical name
+   is to be defined.  /TABLE can be used to specify a user defined
+   logical name table; to specify the process, job, group, or 
+   system logical tables; or to specify process or system logical name
+   directory tables.
+ 
+   If the table name uses a logical name that has more than one 
+   translation, then the logical name is placed in the first
+   table found.
+
+   If /TABLE is not explicitly used, then  /TABLE defaults to 
+   /TABLE=LNM$PROCESS. 
+
+/USER_MODE
+       
+   Specifies that the access mode of the logical name should
+   be USER.  This qualifier is ignored unless the logical
+   name is to be defined in the process table, in which case it
+   is defined in the special user mode table LNM$USERMODE.
+
+2  Examples
+
+   1.  $ ASSIGN/JOB [dev.tape9] MSA0:
+
+     The ASSIGN command associates the equivalence name [dev.tape9]
+     with the logical name MSA0.
+
+2  Implementation_Differences
+
+   Access modes are currently not supported, with the execption of
+   user mode logical names for the process table, which are defined in
+   a special logical name table named LNM$USERMODE.
+atsign/         914018427   128   100   100664  1464      `
+1  @ 
+
+   The @ command is used to run a command procedure.  You may specify 
+   up to 8 parameters to pass to the procedure in local variables P1 
+   through P8.  You may also use the /OUTPUT qualifier to redirect the
+   output of the command procedure to a file.  If you provide a file spec
+   with no file type, the default is ".com".
+
+   Format: 
+
+     @file-spec [P1] [P2] [P3] [P4] [P5] [P6] [P7] [P8]
+
+2  Parameters
+
+ file-spec
+   Tells whether the procedure is to be executed, or the device or file 
+   is where the input from the preceding command is read.
+
+   Wildcards characters are not allowed for the file specification.
+
+ [P1]...[P8]
+   From one to eight parameters. They assign string values to the
+   symbols named P1,P2...P8, in the order encountered.  The symbols
+   are local to the procedure.
+
+2  Qualifiers
+
+/OUTPUT=file-spec
+
+      /OUTPUT=file-spec
+
+   Directs output to the SYS$OUTPUT stream to the given file-spec
+   for the life of the command procedure.  Note that you must specify
+   the /OUTPUT qualifier before the parameters, if any.  Otherwise, the
+   qualifier will be mistaken for a parameter.
+
+2  Examples
+
+   1.  $ @date
+       Today is Thursday, August 8, 1991 at 08:08 PM
+
+     The @ command executes the file date.com, which prints a formatted
+     date string.
+
+2  Implementation_Differences
+
+   The @ command must be used as a verb, it may not be used to
+   insert text into a command line, as in the example $ SHOW @CMD.
+call/           914018427   128   100   100664  1913      `
+1  CALL
+
+   The CALL command is used to branch to a subroutine which
+   is given a new procedure level, including a new local symbol table.
+   You may specify parameters for the new level, which become local
+   symbols P1 through P8.  You may also use the /OUTPUT qualifier to 
+   redirect the output of the subroutine to a file.
+
+   Format: 
+
+     CALL label [P1] [P2] [P3] [P4] [P5] [P6] [P7] [P8]
+
+2  Parameters
+
+ label
+   Is a 1 to 255 alphanumeric character string.  It is the first item on
+   a command line.
+
+   The label may be before or after the CALL command in the current 
+   command procedure.  The label in the command procedure must be 
+   terminated with a colon (:).  Labels for subroutines need only be 
+   unique.
+
+ [P1] [P2] [P3] [P4] [P5] [P6] [P7] [P8]
+   From one to eight parameters that can be passed to the command 
+   Procedure. Each parameter needs to be separated by one or more 
+   blanks.
+
+2  Qualifiers
+
+/OUTPUT
+
+      /OUTPUT=file-spec
+
+   Directs output to the SYS$OUTPUT stream to the given file-spec
+   for the life of the subroutine.  Note that you must specify
+   the /OUTPUT qualifier before the parameters, if any.  Otherwise, the
+   qualifier will be mistaken for a parameter.
+
+2  Examples
+
+   1.  $ CALL MY_SUB 1 2 3
+       1 2 3
+
+     The CALL command executes the subroutine MY_SUB, setting
+     the local symbols P1, P2, and P3 as 1, 2, and 3, respectively.
+     In this example, MY_SUB merely prints its parameters.
+
+2  Implementation_Differences
+
+   If a label is not found, a USGOTO error, rather than a USCALL
+   error, is generated.
+
+   If the first executable command in the subroutine is not SUBROUTINE,
+   an error is generated no matter which command is specified.
+   VMS DCL accepts certain commands before realizing the error.
+
+   When CALL is used interactively, the user is not prompted for
+   a missing label or parameter.  An error is always generated.
+
+continue/       914018427   128   100   100664  466       `
+1  CONTINUE
+
+   The CONTINUE command is used to specify that no action should
+   be taken in an ON command.  No operation is performed in any context.
+
+   Format 
+
+     CONTINUE
+
+2  Examples
+   1.  $ ON ERROR THEN CONTINUE
+
+     The CONTINUE command specifies that no action should be taken when
+     called due to an error condition.
+
+2  Implementation_Differences
+
+   CONTINUE will not restart a command procedure or program which was
+   interrupted by control-Y.
+copy/           914018427   128   100   100664  3424      `
+1  COPY
+
+   The COPY command copies or concatenates a file or files.
+   If the file name or file type is omitted from the output 
+   spec, the corresponding field from the input spec is used.
+   Specifying "*" for either of these fields will have the 
+   same effect.  If both the output file name and output file 
+   type are specified and not wildcarded, multiple input files 
+   will be concatenated together.  Otherwise, the input file(s) 
+   are copied to output file(s) as appropriate.
+
+   Format: 
+
+     COPY input-spec[,...] output-spec
+
+2  Parameters
+
+ input-spec[,...]
+   Is the name of a file to be copied.  Wildcards are acceptable. 
+   If more than one file is specified, separate them with commas.
+
+ output-spec
+   Name of the file where the input file will be copied.
+
+2  Qualifiers
+
+/BEFORE
+
+      /BEFORE[=date]
+
+   Specifies that only files dated earlier than the given time 
+   should be selected.  The default is TODAY.
+
+/BY_OWNER
+
+      /BY_OWNER[=uic]
+
+   Specifies that only files owned by a particular user should be
+   selected.  The default is the UIC of the current user.
+
+/CONFIRM
+
+      /CONFIRM
+      /NOCONFIRM (default)
+
+   This qualifier causes the COPY command to prompt the user
+   to confirm the action for each file matching the spec.  Affirmative
+   responses are YES, TRUE, and 1.  Negative responses are NO, FALSE,
+   0, the ctrl-Z key, and pressing return.  Specifying ALL will suppress
+   the confirmation prompt for all remaining files.
+
+/CREATED 
+
+      /CREATED (default)
+
+   Specifies that the creation (status changed) date should be used 
+   when selecting files with /BEFORE or /SINCE.  This qualifier may
+   not be  used unless /BEFORE and/or /SINCE is specified.
+
+/EXCLUDE
+
+      /EXCLUDE=(filespec[,...])
+
+   Specifies that files matching the given filespec(s) should not
+   be selected.
+
+/LOG
+
+      /LOG
+      /NOLOG (default)
+
+   Controls whether an informational message is displayed for each file
+   as it is copied.
+
+/MODIFIED
+
+   Specifies that the date of last modification should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/PROTECTION
+
+      /PROTECTION=(prot-code)
+
+   Specifies the protection to give the file.  The default is to
+   retain the current protection for an existing file, and
+   to use the user's default protection string otherwise.
+
+/REPLACE
+
+      /REPLACE
+      /NOREPLACE (default)
+
+   Specifies whether COPY should overwrite an existing file.
+   If /REPLACE is not specified, it is illegal to copy over an
+   existing file.
+
+/SINCE
+
+      /SINCE[=date]
+
+   Specifies that only files dated later than the given time should
+   be selected.  The default is TODAY.
+
+2  Examples
+
+   1.  $ COPY accelr8.1,accelr8.2 accelr8.3
+
+     The COPY command concatenates the files accelr8.1 and accelr8.2,
+     creating the file accelr8.3.
+
+2  Implementation_Differences
+
+   The /CREATED qualifier selects by the date of last status change,
+   not creation.  UNIX does not store creation dates.
+
+   Use of node specifications limits the COPY command's ability
+   to detect errors, and qualifiers are ignored for network copies.
+   This is because the COPY command must call a limited UNIX command to
+   perform a network copy.  You may customize which command is used for
+   network copies by changing the NETCP setting in an a8defaults file.
+   The default is rcp.
+create/         914018427   128   100   100664  2795      `
+1  CREATE
+
+   The CREATE command creates the specified file or files
+   by reading SYS$INPUT for the data.  In a command procedure, image data
+   following the CREATE command is used.  If SYS$INPUT is a terminal,
+   use ctrl-Z (end-of-file) to terminate input.
+
+2  file
+   Creates a text file or files.
+ 
+   Format
+   
+     CREATE file-spec[,...]
+
+3  Parameters
+
+ file-spec[,...]
+   Is the name of one or more files.  Wildcards are not permitted.
+   If the file name or type is omitted, then CREATE does not use 
+   defaults.
+
+3  Qualifiers
+
+/LOG
+
+      /LOG
+      /NOLOG (default)
+
+   Controls whether an informational message is displayed for each
+   file as it is created.
+
+/OWNER_UIC
+
+      /OWNER_UIC[=uic]
+
+   Specifies that the file should be created with an owner
+   of the specified UIC instead of the creator's UIC.
+
+/PROTECTION
+
+      /PROTECTION=(protection-list)
+
+   Specifies a protection to give the created file instead of
+   the default.
+
+3  Examples
+
+   1.  $ CREATE tmp.tmp
+       88888888
+       12345678
+       $! Without the DECK command a dollar sign is end-of-data
+
+     The CREATE command creates a file named tmp.tmp with the
+     data lines "88888888" and "12345678".  The comment following
+     the data here serves as an end-of-data marker.
+
+3  Implementation_Differences
+
+   System protection is ignored, because it is not available in UNIX.
+   To set an owner other than the current user, the user must be
+   superuser (root).
+
+   The /PROTECTION and /OWNER qualifiers have no effect when the
+   file-spec is one of the default files (e.g. SYS$OUTPUT).
+
+
+2  /DIRECTORY
+   The CREATE/DIRECTORY command creates the directory or directories
+   names in the list of directory specifications.
+
+   Format: 
+
+     CREATE/DIRECTORY dir-spec[,...]
+
+3  PARAMETER
+
+ dir-spec[,...]
+   Is the name of one or more directories or subdirectories to be created.
+   Wildcards are not permitted. When subdirectories are specified, they
+   should be separated by periods.
+
+3  Qualifiers
+
+/LOG
+
+      /LOG
+      /NOLOG (default)
+
+   Controls whether an informational message is displayed for each
+   directory as it is created.
+
+/OWNER_UIC
+
+      /OWNER_UIC[=uic]
+
+   Specifies that the directory should be created with an owner
+   of the specified UIC instead of the creator's UIC.
+
+/PROTECTION
+
+      /PROTECTION=(protection-list)
+
+   Specifies a protection to give the created directory instead of
+   the default.
+
+3  Examples
+ 
+   1.  $ CREATE/DIRECTORY [.tmp],[.tmp2]
+
+     The CREATE/DIRECTORY command creates directories named tmp and
+     tmp2 as subdirectories of the current directory.
+
+3  Implementation_Differences 
+
+   System protection is ignored, because it is not available in UNIX.
+   To set an owner other than the current user, the user must be
+   superuser (root).
+
+deassign/       914018427   128   100   100664  1803      `
+1  DEASSIGN
+
+   The DEASSIGN command allows the user to remove a logical
+   name or name table from the specified parent table.
+
+   Format: 
+
+     DEASSIGN [logical-name]
+
+2  Name
+   Cancels the logical name assignment that was made with ASSIGN
+   or DEFINE. 
+
+3  Parameters
+
+ [logical-name]
+   Is the logical name that will be deassigned.  The  name can have 
+   1 to 255 characters.  If the name has non-alphanumeric characters
+   put double quotes (" ") around it.
+
+3  Qualifiers
+
+/ALL
+
+   Removes all logical names from the given table, and the
+   table itself if it is not one of the default tables (LNM$PROCESS,
+   LNM$JOB, LNM$GROUP, LNM$WORLD)
+
+/JOB
+
+   Specifies that the logical name is to be deleted from the job
+   logical name table.
+
+/PROCESS
+
+      /PROCESS (default)
+
+   Specifies that the logical name is to be deleted from the process
+   logical name table.
+
+/SUPERVISOR_MODE
+
+      /SUPERVISOR_MODE (default)
+
+   Specifies that the access mode of the logical name to be deleted
+   is SUPERVISOR.  This qualifier is currently ignored.
+
+/TABLE
+
+      /TABLE=table-name
+
+   Specifies a user-supplied table name where the logical name
+   is to be deleted.
+
+/USER_MODE
+
+   Specifies that the access mode of the logical name to be deleted
+   is USER.  This qualifier is ignored unless /PROCESS or
+   /TABLE=LNM$PROCESS is specified, in which case the logical name
+   is deleted from the user mode table LNM$USERMODE.
+
+3  Examples
+
+   1.  $ DEASSIGN/PROCESS/ALL
+
+     The DEASSIGN command removes all entries from the process table
+     and reinitializes it to its default state.
+
+3  Implementation_Differences
+
+   Access modes are currently not supported, with the exception
+   of process table user mode logical names, which are stored in
+   a special user mode table named LNM$USERMODE.
+
+
+define/         914018427   128   100   100664  3666      `
+1  DEFINE
+
+   The DEFINE command allows the user to associate or reassociate
+   one or more equivalence strings with a logical name.  This 
+   command is equivalent to the ASSIGN command, but the parameters 
+   are in the opposite order.
+
+   Format: 
+
+     DEFINE logical-name equivalence-name[,...]
+
+2  Parameters
+
+ logical-name 
+   Is a string containing 1 to 255 characters.  If the name is to be 
+   defined in the process or system directory then the name can be
+   from 1 to 31 characters.
+
+ equivalence-name[,...]
+   Can be a string from 1 to 255 characters also.  If there is more
+   than one equivalence name for a logical name, than a search list
+   is created.
+
+2  Qualifiers 
+
+/JOB
+
+   Specifies that the logical name is to be defined in the job
+   logical name table.
+
+/LOG
+
+      /LOG (default)
+      /NOLOG
+
+   Controls whether an informational message is displayed when a
+   logical name is redefined.
+
+/PROCESS
+
+      /PROCESS (default)
+
+   Specifies that the logical name is to be defined in the process
+   logical name table.
+
+/SUPERVISOR_MODE
+
+      /SUPERVISOR_MODE (default)
+
+   Specifies that the access mode of the logical name should
+   be SUPERVISOR.  This qualifier is currently ignored.
+
+/TABLE
+
+      /TABLE=table-name
+
+   Specifies a user-supplied table name where the logical name
+   is to be defined.
+
+/USER_MODE
+
+   Specifies that the access mode of the logical name should
+   be USER.  This qualifier is currently ignored.
+
+2  Examples 
+
+   1.  $ DEFINE/JOB SEARCH_LIST [user.accelr8],[user.bozo]
+
+     The DEFINE command associates the equivalence names [user.accelr8]
+     and [user.bozo] with the logical name SEARCH_LIST.
+
+2  Implementation_Differences 
+
+   Access modes are currently not supported.
+
+2  /KEY
+   The DEFINE/KEY command allows the user to associate a string
+   with a keypad or function key on terminals conforming to DEC's 
+   vt52, vt100, or lk201 standards.  Definition of the left and right 
+   arrow keys has no effect unless the command SET TERMINAL/NOLINE_EDITING 
+   has been used.  Note that some keypad keys are not available until 
+   the SET TERMINAL/APPLICATION command has been specified.
+
+   Format: 
+
+     DEFINE/KEY key-name equivalence-string
+
+3  Parameters
+
+ key-name
+   Is the name of the key being defined, which is one of PF1...PF4,
+   KP0...KP9, LEFT, RIGHT, PERIOD, MINUS, COMMA, ENTER, E1...E6,
+   F6...F14, HELP, DO, or F17...F20.
+
+ equivalence-string
+   Is the string that will be processed when you press the key.
+
+3  Qualifiers
+
+/ECHO
+
+      /ECHO (default)
+      /NOECHO
+
+   Specifies whether or not to echo the string as the key is processed.
+   The default is to display the string.
+
+/LOG
+
+      /LOG (default)
+      /NOLOG
+
+   Specifies whether an informational message is displayed when
+   the key is defined.  The default is to display a message.
+
+/TERMINATE
+
+      /TERMINATE
+      /NOTERMINATE (default)
+
+   Controls whether pressing the key will terminate the
+   line as if the RETURN key was pressed.  The default is to
+   allow further input on the command line.
+
+3  Examples 
+
+   1.  $ DEFINE/KEY PF1 "DIRECTORY/SIZE" /TERMINATE/NOECHO
+       %DCL-I-DEFKEY, DEFAULT key PF1 has been defined
+
+     The DEFINE/KEY command associates the string "DIRECTORY/SIZE"
+     with the PF1 key of the keypad.  When PF1 is pressed, the string
+     DIRECTORY/SIZE is added to the current command line without being
+     echoed to the terminal, and the command line is processed.
+
+3  Implementation_Differences
+
+   Keys F6 through F14 are usable in DCL regardless of whether
+   line editing is enabled or disabled.
+
+   Key states other than the default state are not currently supported.
+delete/         914018427   128   100   100664  3626      `
+1  DELETE
+
+   The DELETE command deletes the files specified by the list
+   of file-specs.
+
+2  file
+   Deletes on or more files from the disk.
+
+   Format: 
+
+     DELETE file-spec[,...]
+
+3  Parameters
+
+ file-spec[,...]
+   One or more files to be deleted.  Wildcards can be used.
+
+   To delete more than one file separate the file specs with a comma 
+   (,).
+
+3  Qualifiers 
+
+/BEFORE
+
+      /BEFORE[=date]
+
+   Specifies that only files dated earlier than the given time should
+   be selected.  The default is TODAY.
+
+/BY_OWNER
+
+      /BY_OWNER[=uic]
+
+   Specifies that only files owned by a particular user should be
+   selected.  The default is the UIC of the current user.
+
+/CONFIRM
+
+      /CONFIRM
+      /NOCONFIRM (default)
+
+   This qualifier causes the DELETE command to prompt the user
+   to confirm the action for each file matching the spec.  Affirmative
+   responses are YES, TRUE, and 1.  Negative responses are NO, FALSE,
+   0, the ctrl-Z key, and pressing return.  Specifying ALL will suppress
+   the confirmation prompt for all remaining files.
+
+/CREATED
+
+      /CREATED (default)
+
+   Specifies that the creation (status changed) date should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/EXCLUDE
+
+      /EXCLUDE=(filespec[,...])
+
+   Specifies that files matching the given filespec(s) should not
+   be selected.
+
+/LOG
+
+      /LOG
+      /NOLOG (default)
+
+   Controls whether an informational message is displayed for each file
+   as it is deleted.
+
+/MODIFIED
+
+   Specifies that the date of last modification should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/SINCE
+
+      /SINCE[=date]
+
+   Specifies that only files dated later than the given time should
+   be selected.  The default is TODAY.
+
+3  Examples 
+
+   1.  $ DELETE/MODIFIED/BEFORE=TODAY *.TMP
+
+     The DELETE command deletes files in the current directory
+     matching the file-spec "*.tmp" which were modified earlier
+     than midnight today.
+
+3  Implementation_Differences 
+
+   The superuser (root, user number 0) has the privilege to delete
+   any file, there is no SYSTEM permission.  There is also no delete
+   permission, so a user must have write access to the file to delete it.
+
+   The plus (+) separator in the file spec list is not supported.
+   Use the comma (,).
+
+   The /CREATED qualifier selects by the date of last status change,
+   not creation.  UNIX does not store creation dates.
+
+   Version numbers are ignored, and not required, in the file spec.
+
+2  /SYMBOL
+   The DELETE/SYMBOL command removes one or more symbols from
+   a table.  The symbol name is required unless /ALL is specified.
+   Note, this command will not delete symbols that were put in the
+   UNIX symbol table (Environment variables).
+
+   Format: 
+
+     DELETE/SYMBOL symbol-name
+
+3  Parameters
+
+ symbol-name
+   Is the name of the symbol that will be deleted.  The symbol name
+   can be from 1 to 255 characters.
+
+3  Qualifiers 
+
+/ALL
+
+   Deletes all of the symbols in the table.  Specify either /ALL
+   or a symbol name, but not both.
+
+/GLOBAL
+
+   Deletes the symbol or symbols from the global symbol table.
+
+/LOCAL
+
+      /LOCAL (default)
+
+   Deletes the symbol or symbols from the current local symbol table.
+
+/LOG
+
+      /LOG
+      /NOLOG (default)
+
+   Controls whether an informational message is displayed for each symbol
+   as it is deleted.
+
+3  Examples 
+
+   1.  $ DELETE/SYMBOL/ALL/GLOBAL
+
+     The DELETE/SYMBOL command deletes all symbols in the global
+     symbol table.
+differences/    914018427   128   100   100664  4277      `
+1  DIFFERENCES
+
+   The DIFFERENCES command compares the lines in two text files
+   and reports the differences.
+
+   Format: 
+
+     DIFFERENCES file-spec1 file-spec2
+
+2  Parameters
+
+ file-spec1
+   Is the first file to be compared.  The specification needs to have 
+   a name and file type.  Wildcards are not legal.
+
+ file-spec2
+   Is the second file to be compared. Wildcards are not legal.
+
+2  Qualifiers 
+
+/IGNORE
+
+      /IGNORE=(keyword[,...])
+
+   The keywords specify that certain characters or lines should be ignored
+   in the file comparison, and/or the format in which to output records.
+   The keywords available are:
+
+   BLANK_LINES     Ignores blank lines.
+
+   COMMENTS        Ignores comments (text beginning with "!").
+
+   EDITED          Outputs lines with ignored characters removed (default).
+
+   EXACT           Output lines exactly as they exist in the file.
+
+   FORM_FEEDS      Ignores form feed characters.
+
+   HEADER[=n]      Ignores headers (first character a form feed, n lines
+                   of text, default 2 lines).
+
+   PRETTY          Outputs <CR>, <LF>, <VT>, and <FF> as their
+                   mnemonic equivalents, expands tabs to spaces, and
+                   outputs other nonprintable characters as dots.
+   
+   SPACING         Treats multiple blanks and tabs as a single space.
+   
+   TRAILING_SPACES Ignores blanks at the end of a line.
+       
+/MATCH
+
+      /MATCH=lines
+
+   Specifies that files should not be considered resynchronized until
+   the specified number of lines match.  The default is 3 lines.
+
+/MAXIMUM_DIFFERENCES
+
+      /MAXIMUM_DIFFERENCES=maximum
+
+   Specifies that DIFFERENCES should abort when the specified
+   maximum number of difference lines is reached.  The default is
+   no maximum number of differences.
+
+/MERGED 
+
+      /MERGED[=lines]
+
+   Specifies how many lines of resynchronization should be displayed
+   at the end of each difference section, and specifies that the
+   differences should be reported in the default output format.
+   The default is /MERGED=1 when /PARALLEL is not specified or when
+   both /PARALLEL and /MERGED are specified.
+
+/NUMBER
+
+      /NUMBER (default)
+      /NONUMBER
+
+   Specifies that line numbers should be included for displayed records.
+
+/OUTPUT
+
+      /OUTPUT[=file-spec]
+
+   Specifies a file to write the report to.  The default when /OUTPUT
+   is not specified is to write the report to the terminal.  If the
+   file specification is not given, the default is the file name
+   of the first input file with a file type of ".dif".
+
+/PARALLEL
+
+      /PARALLEL[=lines]
+
+   Specifies that the differences should be displayed side-by-side.
+   Optionally also specifies how many lines of resynchronization should
+   be displayed at the end of each difference section.  The default
+   is to display no lines at the end of each section.
+
+/WIDTH
+
+      /WIDTH=columns
+
+   Specifies the maximum number of characters per line for output.
+   The default is the terminal width, or 132 if /OUTPUT is specified.
+   The minimum width is 12.
+
+/WINDOW
+
+      /WINDOW=lines
+
+   Specifies how many lines to search ahead in the file to determine
+   if a record is truly unmatched.  The default is to search to the
+   end of the other file for a match.
+
+2  Examples
+ 
+   1.  $ DIFFERENCES accelr8a.txt accelr8b.txt
+       **********
+       File [usr.accelr8]accelr8a.txt
+       8   88888888
+       9   8888
+       *****
+       File [usr.accelr8]accelr8b.txt
+       8   8888888888888888
+       9   8888
+       **********
+
+       Number of difference sections found: 1
+       Number of difference records found: 1
+
+   2.  $ DIFFERENCES /IGNORE=()/MERGED=1-
+       [usr.accelr8]accelr8a.txt-
+       [usr.accelr8]accelr8b.txt
+       
+     The DIFFERENCES command displays the difference line found and
+     then merges one following line which marks the beginning of
+     where the files are resynchronized.
+
+2  Implementation_Differences 
+
+   Currently two file names must be specified for this command.  The ability
+   to compare two versions of the same file is not provided.
+
+   Every attempt has been made to replicate the operation of
+   VMS DIFFERENCES, but the algorithm used by this command may differ
+   in some ways because the original algorithm was not available for
+   reference.
+
+dir/            914018427   128   100   100664  6301      `
+1  DIRECTORY
+
+   The DIRECTORY command displays a list of files which match
+   the file specification and qualifiers given.  The amount of
+   information displayed for each file is determined by the 
+   qualifiers specified.  By default, only the file name is 
+   displayed.  Wildcards characters are permitted in the file 
+   specification.
+
+   Format: 
+
+     DIRECTORY [file-spec[,...]]
+
+2  Parameters
+
+ file-spec[,...]
+   Indicates one or more files to be listed.  The syntax of the 
+   specification determines how the files will be listed.
+
+   Wildcards are acceptable for the file and file type name.  If
+   more than one file is specified, separate them by commas. 
+
+2  Qualifiers 
+
+/ACCESSED
+
+   Selects files according to when they were last accessed in
+   any way, including being read.  This qualifier only has
+   meaning with the /BEFORE or /SINCE qualifier.  Use of
+   /ACCESSED is incompatible with /MODIFIED or /STATUS_CHANGED.
+   /STATUS_CHANGED is the default if neither /ACCESSED nor
+   /MODIFIED is specified.
+
+/BEFORE
+
+      /BEFORE[=time]
+
+   Selects only files which are dated before the given time.
+   You can specify the time in absolute or combination format.
+   You may also specify TODAY, TOMORROW, or YESTERDAY.  The
+   default is TODAY.
+
+/BRIEF
+
+      /BRIEF(default)
+
+   Displays only file names.
+
+/BY_OWNER
+
+      /BY_OWNER[=uic]
+
+   Displays only files belonging to the specified owner.
+
+/COLUMNS
+
+      /COLUMNS=n
+
+   Specifies how many columns should be output, if possible.
+
+/CREATED
+
+   This is equivalent to the /STATUS_CHANGED qualifier, see below.
+
+/DATE
+
+      /DATE[=option]
+      /NODATE
+
+   Displays the access, modification, and/or last status change dates
+   in the directory listing.  If no option is given, DCL uses the
+   status changed date.
+
+   You can use the following options with the /DATE qualifier:
+
+   ALL             Lists ACCESSED, MODIFIED, and STATUS_CHANGED dates.
+
+   ACCESSED        Lists the date the file was last accessed.
+
+   MODIFIED        Lists the date the file was last modified.
+
+   STATUS_CHANGED  Lists the date the file's status last changed
+                   (e.g. ownership or protection).
+
+/DOTFILES
+
+   When specified, file names beginning with a dot (.) are displayed
+   in directory listings.  The default is to hide such files.
+
+/EXCLUDE
+
+      /EXCLUDE=(file-spec[,...])
+
+   Excludes files matching the given file specification(s).
+
+/FILE_ID
+
+   Displays the ID numbers of the files.
+
+/FULL
+
+   Displays all available information about the files.
+
+/GRAND_TOTAL
+
+   Displays only a line showing the total number of files and
+   directories matching the specified options.
+
+/HEADING
+
+      /HEADING
+      /NOHEADING
+
+   Displays a heading line for each directory.
+
+/MODIFIED
+
+   Selects files according to when they were last modified.
+   This qualifier only has meaning with the /BEFORE or /SINCE
+   qualifier.  Use of /MODIFIED is incompatible with /ACCESSED or
+   /STATUS_CHANGED.  /STATUS_CHANGED is the default if neither
+   /ACCESSED nor /MODIFIED is specified.
+       
+/OUTPUT
+
+      /OUTPUT=file-spec
+
+   Redirects terminal output to a file.
+
+/OWNER
+
+      /OWNER
+      /NOOWNER (default)
+
+   Displays the UIC of the owner of the file.
+
+/PROTECTION
+
+      /PROTECTION
+      /NOPROTECTION (default)
+
+   Displays the file protection.
+
+/SELECT
+
+      /SELECT=SIZE[=(keyword[,...])]
+
+   Selects files by size according to the option keywords given.
+   You may specify MAXIMUM=n and/or MINIMUM=n to set a maximum or
+   minimum block size, respectively.
+
+/SINCE
+
+      /SINCE[=time]
+
+   Selects only files which are dated later than the given time.
+   You can specify the time in absolute or combination format.
+   You may also specify TODAY, TOMORROW, or YESTERDAY.  The
+   default is TODAY.
+
+/SIZE
+
+      /SIZE[=option]
+      /NOSIZE (default)
+
+   Provides the file size in blocks used and/or allocated, according
+   to the option specified.  If you do not specify an option, the
+   default is USED.
+
+   The options you can specify with /SIZE are:
+
+   ALL           Lists both allocated and used size.
+
+   ALLOCATION    Lists the number of blocks allocated.
+
+   USED          Lists the number of blocks used.
+
+/STATUS_CHANGED
+
+   Selects files according to when their status last changed.
+   This qualifier only has meaning with the /BEFORE or /SINCE
+   qualifier.  Use of /STATUS_CHANGED is incompatible with /ACCESSED
+   or /MODIFIED.  /STATUS_CHANGED is the default if neither
+   /ACCESSED nor /MODIFIED is specified.
+
+/TOTAL
+
+   Suppresses display of filenames, displaying only the total count.
+
+/TRAILING
+
+      /TRAILING
+      /NOTRAILING
+
+   Displays a line containing the count of files for each directory.
+
+/WIDTH
+
+      /WIDTH=(keyword[,...])
+
+   Sets field and/or display widths corresponding to the following
+   keywords:
+
+   DISPLAY      Size of screen in columns.  If you do not specify
+                a width, the default is 0, which results in using
+                the terminal width.
+
+   FILENAME     Width of the file name field, the default is 19.
+
+   OWNER        Width of the owner field, the default is 20.
+
+   SIZE         Width of the size field, the default is 6.
+
+2  Examples
+ 
+   1.  $ DIR/FULL myfile.lis
+
+       Directory [usr.accelr8]
+
+       myfile.lis
+       File ID:           (88888,888,8)
+       Size:              888/888
+       Owner:             [accelr8.accelr8]
+       Accessed:          08-AUG-1988 08:08:08
+       Revised:           08-AUG-1988 08:08:08
+       Status changed:    08-AUG-1988 08:08:08
+       File organization: Sequential
+       Record format:     Variable length
+       File protection:   System:RWED, Owner:RWED, Group:RWED, World:RE
+
+       Total of 1 file, 888/888 blocks.
+
+2  Implementation_Differences 
+
+   The /ACCESSED and /STATUS_CHANGED qualifiers are added to allow
+   selection of files based on UNIX dates.  /BACKUP and /EXPIRED
+   have no meaning on a UNIX system and are not supported.  UNIX 
+   also does not support creation dates, so the /CREATED qualifier
+   is treated as equivalent to the /STATUS_CHANGED qualifier.
+
+   UNIX has no version numbers and no ACL functionality, hence the
+   /VERSIONS and /ACL qualifiers are not supported.
+
+   Directories for which the user has no search permission will not
+   appear in the listing.
+
+
+echo/           914018427   128   100   100664  605       `
+1  ECHO
+
+   The ECHO command writes the given list of string expressions
+   to SYS$OUTPUT.  It is equivalent to WRITE SYS$OUTPUT, except that the
+   list of expressions is not required and no qualifiers are allowed.  If
+   the list is omitted, a blank line is written.  Note, this is an
+   Accelr8 extension.
+
+   Format: 
+
+     ECHO [expression][,...]
+
+2  Parameters
+
+ [expression][,...]
+   A list or one or more string or integer expressions, separated by commas.
+ 
+2  Examples
+ 
+   1.  $ ECHO "Hello, world"
+       Hello, world
+
+     The ECHO command writes the expression "Hello, world" to SYS$OUTPUT.
+
+endsubr/        914018427   128   100   100664  342       `
+1  ENDSUBROUTINE
+
+   The ENDSUBROUTINE command marks the end of a subroutine
+   for the CALL command.  It causes the subroutine to return to line in
+   the command procedure which follows the CALL command.
+
+   Format: 
+
+     ENDSUBROUTINE
+
+2  Examples 
+
+   1.  $ ENDSUBROUTINE
+
+     The ENDSUBROUTINE command marks the end of the subroutine.
+eoj/            914018427   128   100   100664  187       `
+1  EOJ
+
+   The EOJ command is used to signify the end of a batch job.
+
+   Format: 
+
+     EOJ
+
+2  Examples 
+
+   1.  $ EOJ
+
+     The EOJ command signifies an end of job, causing a logout.
+
+
+exit/           914018427   128   100   100664  658       `
+1  EXIT
+
+   The EXIT command exits from a command procedure, optionally
+   setting a return status as specified by expression.  Control is passed 
+   to the previous command level, which may be another command procedure 
+   or the interactive command level.  EXIT does not log the user out 
+   from the interactive command level.
+
+   Format: 
+
+     EXIT [expression]
+
+2  Parameters
+
+ [expression]
+   Is a string or integer expression whose value is used as the exit status.
+
+2  Examples
+ 
+   1.  $ EXIT 12
+       SYSTEM-F-ACCVIO, access violation
+
+     The EXIT command returns a status code of 12 and returns to the
+     next highest command level, if any.
+gosub/          914018427   128   100   100664  656       `
+1  GOSUB
+
+   The GOSUB command transfers command procedure execution to
+   the subroutine beginning with the given label.  Duplicate labels are 
+   handled in the same manner as the GOTO command.
+
+   Format:
+
+     GOSUB label
+
+2  Parameters
+
+ label
+   Is a label of 1 to 255 characters that is the item on a command line.
+   A label cannot have embedded blanks.
+
+2  Examples
+
+   1.  $ GOSUB MY_SUB
+
+     The GOSUB command branches to the label MY_SUB.
+
+2  Implementation_Differences 
+
+   The label table is not contained in the local symbol table space,
+   and so procedures with too many labels for VMS DCL should execute
+   without a "table full" error.
+goto/           914018427   128   100   100664  819       `
+1  GOTO
+
+   The GOTO command transfers command procedure execution to
+   the line beginning with the given label.  No operation is
+   performed if GOTO is not used in a command procedure.  If 
+   duplicate labels exist in a command procedure, the most 
+   recent preceding label is used, if any.  Otherwise, the 
+   nearest following label is used.
+
+   Format: 
+    
+     GOTO label
+
+2  Parameters
+
+ label
+   Is a label of 1 to 255 characters that  is the first item on a 
+   command line.  A label cannot have embedded blanks.
+
+2  Examples 
+
+   1.  $ GOTO GO_ON
+
+     The GOTO command branches to the label GO_ON.
+
+2  Implementation_Differences 
+
+   The label table is not contained in the local symbol table space,
+   and so procedures with too many labels for VMS DCL should execute
+   without a "table full" error.
+
+help/           914018427   128   100   100664  6554      `
+1  HELP
+     
+   The HELP command is used to display information about a DCL command or
+   topic.  At the "Topic?" prompt you can type one of the following:
+
+     o  The command or topic for which the user is looking. 
+
+     o  The word INSTRUCTIONS for more information on how to use HELP. 
+
+     o  The question mark (?) to display the last item requested.
+
+     o  The RETURN key one or more times to exit back to the DCL prompt.
+
+   Any topic name can be abbreviated.
+
+2  Parameters
+
+ keyword ...
+
+  Means one or more keywords that refer to the wanted topic or subtopic.
+  The information in the HELP libraries is arranged in a specific
+  hierarchy. The levels are:
+
+  1. None-- If no keyword is used then HELP describes itself and lists
+     the topics in the root library that are at level 1.
+
+  2. Topic-name-- If a topic keyword is specified, HELP will describe 
+     the topic as it is in the root library or one of the other enabled
+     default libraries.  The keywords corresponding to this topic are 
+     then listed.
+
+  3. Topic-name subtopic-- If you enter a subtopic after a specified
+     topic HELP will describe the subtopic.
+
+  4. @file-spec-- Can be followed by 1-3 above.  If a HELP library is 
+     used to replace the root library.  HELP will search that library
+     for the topic specified.  The file-spec needs to be similar in 
+     form to that used by the /LIBRARY command qualifier.
+
+  If a asterisk is used instead of a keyword, the HELP command will 
+  display all the information for the level that the asterisk replaces.  
+  Example:  HELP CC * displays all the subtopics of CC.
+
+  Percent signs (%) and asterisks (*) can be used as wildcards in 
+  the keywords.
+
+2  Qualifiers
+
+/INSTRUCTIONS
+
+      /INSTRUCTIONS (default)
+      /NOINSTRUCTIONS
+
+   Tells the HELP command to display information on how to use the HELP
+   facility.  By default a description of the facility is displayed with
+   a list of the topics following.  If /NOINSTRUCTIONS is used only the
+   topics are listed.
+
+/LIBLIST
+
+      /LIBLIST (default)
+      /NOLIBLIST
+
+   Tells whether other HELP libraries are to be output at the topic 
+   level.
+
+/LIBRARY
+
+      /LIBRARY=file-spec
+      /NOLIBRARY
+
+   Tell whether another HELP library should be used in place of the 
+   default system library "SYS$HELP:LITEHELP.HLB". This library is used 
+   as the main HELP library, so is searched before any other user-
+   defined default libraries.
+
+   The default file extension is .HLB.  If you  do not use the device and
+   directory names the default is "SYS$HELP".  This is the logical name
+   of the location of the system HELP libraries.
+
+   If /NOLIBRARY is used the default HELP library is excluded from the 
+   search order. 
+
+/OUTPUT
+
+      /OUTPUT[=file-spec]
+      /NOOUTPUT
+
+   Sets up where output from the command is placed.  If the qualifier is
+   not used, or the qualifier is used without a file-spec the output is
+   sent to default output. Default output corresponds to the logical
+   name "SYS$OUTPUT".
+
+   A file specification may not have wildcard characters.  If a file-spec
+   is used that does not have an extension, then the default file is
+   HELP and the extension is LIS.
+
+   If /NOOUTPUT is used then there is no output.
+
+/PAGE
+
+      /PAGE (default)
+      /NOPAGE
+
+   The /PAGE qualifier will send output to the screen one page at a time.
+
+   If /NOPAGE is used, output will continue until all the information is
+   displayed or until the display is stopped manually.
+
+/PROMPT
+
+      /PROMPT (default)
+      /NOPROMPT
+
+   Tells HELP to start an interactive session after the HELP request 
+   has been taken.  If /NOPROMPT is used HELP will return back to the
+   DCL prompt after displaying the information.
+
+   If /PROMPT is used then there can be one of four different prompts.
+   Each prompt corresponds to a different level. They are:
+
+   1. Topic?-- Root is the main library, and no particular topic is being
+      looked for.
+
+   2. [library-spec] Topic-- The root library is not the main library, 
+      and no particular topic is being looked at.
+
+   3. [keyword] subtopic?-- Root is the main library, and a topic or sub-
+      topic is currently being looked for.
+
+   4. Numbers 2 and 3 together.
+
+   When these prompts are seen, there are particular responses that can
+   be entered. They are:
+
+   Response       Something typed in at the current prompt
+
+   keyword[...]   (1,2) Look at all enabled libraries for keyword.
+                  (3,4) Look at additional libraries for topic.
+
+   @file-spec     (1,2) Same as keyword, but @file-spec is now root
+                  library.
+                  (3,4) Same as keyword.
+
+   ?              (1,2) Displays topics from the root library.
+                  (3,4) Displays current topic's subtopics.
+
+   <RET>          (1) Gets out of HELP, back to DCL prompt
+                  (2) Goes back from the root to main library
+                  (3,4) Moves back up one level and asks for a topic
+                  or sub-topic at that new level.
+
+   <CTRL/Z>       (1,2,3,4) Exits help back to the DCL prompt.
+
+/USERLIBRARY
+
+      /USERLIBRARY=(table[,...])
+      /NOUSERLIBRARY
+
+   Determines if HELP searches one or more user-specified root
+   libraries after looking in the root HELP library.
+
+   After using the /USERLIBRARY qualifier, HELP will search the process,
+   group, and system logical tables for names in the form: HLP$LIBRARY,
+   HLP$LIBRARY_1, HLP$LIBRARY_2, etc.. HELP looks in the order of the
+   root library, main library, process library, group library, system
+   library, and root library.
+
+   The following keywords can be specified:
+
+   ALL       HELP will search process, group, system logical tables.  
+
+   NONE      HELP will not search any tables, equal to /NOUSERLIBRARY
+  
+   PROCESS   HELP will search the process logical table.
+
+   GROUP     HELP will search the group logical table.
+
+   SYSTEM    HELP will search the system table.
+
+   The default is /USERLIBRARY=ALL.
+
+2  Examples
+
+   1.    $ HELP
+
+         HELP
+          .
+          . (HELP message )
+          . (list of topics found)
+         Topic?
+
+   If HELP is used with no parameters or qualifiers the topics from the
+   root HELP library "SYS$HELP:LITEHELP.HLB" will be used.
+
+   2.    $ HELP FILL
+
+         Sorry, no documentation on FILL
+    
+         Additional information is available:
+          .
+          .  (list of top level topics)
+          .
+         Topic?
+
+2  Implementation_Differences
+
+   User-libraries are currently not implemented.
+
+   No TUTOR right now. 
+if/             914018427   128   100   100664  1115      `
+1  IF
+
+   The IF command evaluates an expression and performs
+   the command following THEN if the expression is true.
+
+   Format:
+
+     IF expression THEN [$] [command]
+
+   or
+
+     IF expression
+     THEN [command]
+     command
+     .
+     .
+     .
+     [ELSE] [command]
+     command
+     .
+     .
+     .
+     ENDIF
+
+2  Parameters
+
+ expression
+   Is an integer or string expression which is tested for truth or
+   falsehood.
+
+ [command]
+   Is a DCL command(s) to be executed.  The result of the expression
+   can evaluate to true or false. 
+ 
+2  Examples
+ 
+   1.  $ IF X .EQ. Y THEN WRITE SYS$OUTPUT "X and Y match"
+
+     The IF command executes the specified WRITE command if
+     the value of the symbol X is equal to the value of the symbol Y.
+
+   2.  $ IF X .EQ. Y 
+         THEN 
+           WRITE SYS$OUTPUT "X and Y match"
+         ELSE
+           WRITE SYS$OUTPUT "X and Y do not match"
+         ENDIF
+
+2  Implementation_Differences 
+
+   An additional operator, .XOR., is available in logical expressions.
+   It performs a bitwise exclusive or and has the same order of
+   precedence as the .OR. operator.
+
+instruct/       914018427   128   100   100664  1670      `
+1  Instructions
+
+   Invoking HELP
+   ------------
+
+   HELP displays information on DCL topics. From the prompt (A8$) you
+   can see a list of the topics that have information, by typing
+   HELP and press the <RTN> key.  There will be a description on how 
+   to use help, followed by a list of the level 1 topics.  After the
+   topics are listed you will see a "Topic?" prompt.
+
+   The HELP utility can be exited any time by typing CTRL-Z.
+
+   Indicating Topic Names
+   ----------------------
+
+   To get the wanted information on a particular topic, type in that
+   topic's name at the prompt and press the <RTN> key.
+
+   If you do not have a clue as to the topic you want, type HINTS 
+    and press the <RTN> key
+
+   To see information on all topics in DCL use the asterisk (*).
+
+   To see information on a particular topic, type in the topic name
+   and follow it by an ellipsis (...).  Example:  SHOW...
+
+   The wild cards that can be used are the percent sign (%) and the
+   asterisk (*).
+
+   Subtopics
+   ---------
+
+   The information on a topic in HELP also lists a set of subtopics
+   that include more information on the topic.  To see information on
+   a subtopic, type in one of the subtopic names at the "Subtopic?"
+   prompt.
+
+   Responses to the Prompts
+   ------------------------
+
+   If <RTN> is typed in at the "Subtopic?" prompt then the "Topic?",
+   prompt will be shown again.  This allows you to enter another
+   topic name.  If <RTN> is typed in at the "Topic?" prompt then you  
+   will exit HELP back to the DCL prompt.
+
+   If a question mark (?) is typed as a response at any prompt then
+   the most recent topic or subtopic is displayed again.
+
+lexfunc/        914018427   128   100   100664  19708     `
+1  Lexicals
+
+   The lexical functions are functions that return information
+   about strings and process attributes. 
+
+2  F$CVSI
+
+   The F$CVSI lexical function interprets a string as a four byte
+   little endian integer (least significant byte first) and extracts 
+   a signed bit field from that integer.
+
+   Format: 
+
+     F$CVSI(bit-position, field-size, string)
+
+3  Parameters 
+
+ bit-position
+   This is the bit position from which to start the extraction.  The
+   lowest bit of the string is at bit position 0.  An invalid range
+   error is generated if this parameter is negative or larger than the
+   number of bits in the string.
+
+ field-size
+   Specifies how many bits to extract from the integer.  A negative
+   value results if the most significant bit in the field is set.
+   An invalid range error is generated for a negative value or when
+   the bit position plus the field size exceeds the string size.
+
+ string
+   This parameter is the character string expression to interpret as
+   a longword integer to extract from.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$CVSI(2, 8, "ABCD")
+       -112
+
+     The F$CVSI function interprets the string "ABCD" as a four-byte
+     integer and extracts eight bits from bit position 2, which is
+     a value of 144.  The most significant bit is set, so the signed
+     value -112 is returned.
+
+3  Implementation_Differences 
+
+   Most UNIX platforms use big endian byte ordering for integer
+   values, and so specifying an integer expression instead of
+   a string expression will cause unexpected results on these
+   platforms (the byte order will be reversed).  Always use
+   string expressions for maximum compatibility.
+
+2  F$CVUI
+
+   The F$CVUI lexical function interprets a string as a four byte
+   little endian integer (least significant byte first) and extracts 
+   an unsigned bit field from that integer.
+
+   Format: 
+
+     F$CVUI(bit-position, field-size, string)
+
+3  Parameters
+
+ bit-position
+   This is the bit position from which to start the extraction.  The
+   lowest bit of the string is at bit position 0.  An invalid range
+   error is generated if this parameter is negative or larger than the
+   number of bits in the string.
+
+ field-size
+   Specifies how many bits to extract from the integer.  An invalid range
+   error is generated for a negative value or when the bit position plus
+   the field size exceeds the string size.
+
+ string
+   This parameter is the character string expression to interpret as
+   a longword integer to extract from.
+
+3  Examples 
+
+   1.  $ WRITE SYS$OUTPUT F$CVUI(2, 8, "ABCD")
+       144
+
+     The F$CVSI function interprets the string "ABCD" as a four-byte
+     integer and extracts eight bits from bit position 2.  The most
+     significant bit is set, but this is an unsigned extraction so 
+     the value 144 is returned.
+
+3  Implementation_Differences 
+
+   Most UNIX platforms use big endian byte ordering for integer
+   values, and so specifying an integer expression instead of
+   a string expression will cause unexpected results on these
+   platforms (the byte order will be reversed).  Always use
+   string expressions for maximum compatibility.
+
+2  F$DIRECTORY
+
+   The F$DIRECTORY lexical function returns the current default
+   directory string.
+
+   Format: 
+
+     F$DIRECTORY()
+
+3  Examples  
+
+   1.  $ WRITE SYS$OUTPUT F$DIRECTORY()
+       [user.accelr8]
+
+     The F$DIRECTORY lexical function returns the current working
+     directory.
+
+3  Implementation_Differences 
+
+   The angle bracket syntax is not supported.  Directory specifications
+   are always in square brackets.
+
+2  F$EDIT
+
+   The F$EDIT lexical function applies various formatting options
+   to a given string.  Only text which is not quoted is affected.
+
+   Format: 
+
+     F$EDIT(string, edit-list)
+
+3  Parameters:
+
+ edit-list
+   The edit-list is a string containing comma-separated keywords
+   which direct the formatting of the string.  The keywords available,
+   and their meaning, are:
+
+   Edit             Action      
+
+   COLLAPSE         remove all blanks from string
+
+   COMPRESS         replace multiple blanks with a single space
+
+   LOWERCASE        convert uppercase characters to lowercase
+
+   TRIM             remove leading and trailing blanks
+
+   UNCOMMENT        remove trailing comment from text
+
+   UPCASE           convert lowercase characters to uppercase
+
+ string
+   The string parameter is an expression which represents the string
+   to edit.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$EDIT("abc DEF!ghi", "collapse, upcase, 
+       uncomment")
+       ABCDEF
+
+     The F$EDIT lexical function returns the given string with its
+     blanks removed, its characters all in uppercase, and the trailing
+     comment deleted.
+
+2  F$ELEMENT
+
+   The F$ELEMENT lexical function uses the given single-character
+   delimiter to find and return the specified element number of the 
+   given string.  If there are fewer elements delimited by the 
+   delimiter character than the element desired, the delimiter 
+   string is returned instead of a substring.
+
+   Format: 
+
+     F$ELEMENT(element, delimiter, string)
+
+3  Parameters 
+
+ delimiter
+   The delimiter parameter must be a single character in a string
+   and is treated as the separator between elements.
+
+ element
+   The element parameter specifies which element to return, which
+   is an offset from zero.  This means the first element is element 0.
+
+ string
+   The string parameter is an expression indicating the string to
+   search for the desired element.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$ELEMENT(1, "-", "08-MAY-91")
+       MAY
+
+     The F$ELEMENT lexical function returns the second element of the
+     string "08-MAY-91", as delimited by the "-" character.
+
+2  F$EXTRACT
+
+   The F$EXTRACT lexical function returns a substring of the
+   given string with the specified offset and length.  If the end of
+   the string is reached before the offset and length are satisfied, 
+   the substring is truncated at that point.
+
+   Format: 
+   
+     F$EXTRACT(offset, length, string)
+
+3  Parameters
+
+ length
+   The length parameter specifies the length of the substring
+   to extract, and should be greater than or equal to zero.
+
+ offset
+   The offset parameter specifies how many characters to the right
+   of the beginning of the string to start at.  This means that
+   the first character in the string is offset zero, and the
+   parameter should be an integer greater than or equal to zero.
+
+ string
+   The string parameter is an expression indicating the string to
+   search for the desired substring.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$EXTRACT(3, 3, "08-MAY-91")
+       MAY
+
+     The F$EXTRACT lexical function returns a substring of length 3,
+     starting at three characters to the right of the first character
+     in the string "08-MAY-91".
+
+2  F$FUV
+
+   The F$FUV lexical function returns a VMS equivalent for the
+   specified UNIX file specification.
+
+   Format: 
+
+     F$FUV(file-spec)
+
+3  Parameters
+
+ file_spec
+   The file-spec is a string expression which is a UNIX file specification.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$FUV("/user/guest/file.dat")
+       [user.guest]file.dat
+
+     The F$FUV lexical function converts the specified UNIX file
+     specification to a VMS equivalent.
+
+3  Implementation_Differences
+
+   This lexical function is not available in VMS DCL.
+
+2  F$FVU
+
+   The F$FVU lexical function returns a UNIX equivalent for the
+   specified VMS file specification.
+
+   Format: 
+
+     F$FVU(file-spec)
+
+3  Parameters
+
+ file_spec
+   The file-spec is a string expression which is a VMS file specification.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$FVU("[user.guest]file.dat")
+       /user/guest/file.dat
+
+     The F$FVU lexical function converts the specified VMS file
+     specification to a UNIX equivalent.
+
+3  Implementation_Differences
+
+   This lexical function is not available in VMS DCL.
+
+2  F$GETSYI
+
+   The F$GETSYI function returns information about the computer
+   system in use.
+
+   Format: 
+
+     F$GETSYI(item[,node][,cluster])
+
+3  Parameters
+
+ cluster
+   This optional string expression specifies a particular cluster
+   for which to return information.  It is ignored.
+
+ item-code
+   This required string expression specifies the type of information
+   desired about the system.  The supported item codes are as follows:
+       
+       ARCH_NAME                F_FLOAT_EMULATED        NODE_SWVERS
+       ARCH_TYPE                G_FLOAT_EMULATED        PAGE_SIZE
+       CHARACTER_EMULATED       HW_MODEL                SCSNODE
+       CLUSTER_MEMBER           HW_NAME                 SCS_EXISTS
+       CPU                      NODENAME                SID
+       DECIMAL_EMULATED         NODE_HWTYPE             VERSION
+       D_FLOAT_EMULATED         NODE_SWTYPE
+
+ node
+   This optional string expression specifies a particular cluster node
+   for which to return information.  It is ignored.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$GETSYI("SID")
+       88888888
+
+     The F$GETSYI function returns the system identification string.
+
+3  Implementation_Differences
+
+   Item codes which exist in VMS DCL but are not listed above return
+   UNKNOWN.
+
+   The VERSION item code returns the current version number of the 
+   computer's operating system.
+
+2  F$INTEGER
+
+   The F$INTEGER function returns the integer equivalent of
+   the given string expression.
+
+   Format: 
+
+     F$INTEGER(string)
+
+3  Parameters
+
+ string
+   This is an expression which F$INTEGER gets the string value of and
+   converts to an integer.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$INTEGER("YES")
+       1
+
+     The F$INTEGER function returns the integer equivalent of "YES",
+     which is 1 because it is logically "TRUE".
+
+2  F$LENGTH
+
+   The F$LENGTH lexical function returns the length of the given
+   string expression.
+
+   Format: 
+
+     F$LENGTH(string)
+
+3  Parameters
+
+ string
+   This parameter is the string expression to get the length of.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$LENGTH("12345678")
+       8
+
+     The F$LENGTH lexical function returns the length of the string
+     "12345678".
+
+2  F$LOCATE
+
+   The F$LOCATE lexical function attempts to find the specified
+   substring in the given string.  The string length is returned if 
+   the substring is not found.
+
+   Format: 
+
+     F$LOCATE(substring, string)
+
+3  Parameters
+
+ string
+   This parameter is the string expression to search for the 
+   substring.
+
+ substring
+   This parameter is the text to search for in the string parameter.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$LOCATE("MAY", "08-MAY-1988")
+       3
+
+     The F$LOCATE lexical function finds the position of the substring
+     MAY in the string "08-MAY-1988", which is 3.
+
+2  F$LOGICAL
+
+   The F$LOGICAL lexical function returns the equivalence string
+   for the given logical name.  Only the first equivalence found is 
+   returned.
+
+   Format: 
+
+     F$LOGICAL(string)
+
+3  Parameters
+
+ string
+   This parameter is the logical name to translate.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$LOGICAL("SYS$OUTPUT")
+       /dev/console
+
+     The F$LOGICAL lexical function returns the translation for
+     the SYS$OUTPUT logical name.
+
+2  F$MODE
+
+   The F$MODE lexical function returns a character string which
+   indicates the current process mode, either INTERACTIVE or BATCH.
+
+   Format: 
+
+     F$MODE()
+
+3  Examples
+
+   1.  $ ECHO F$MODE()
+       INTERACTIVE
+
+     The F$MODE lexical function returns a string indicating that the 
+     current DCL process is in interactive mode.
+
+3  Implementation_Differences
+
+   Only the modes BATCH and INTERACTIVE are supported.
+   F$PARSE
+
+2  F$PARSE
+
+   The F$PARSE lexical function parses a given file specification
+   according to the given options.
+
+   Format: 
+
+     F$PARSE(file-spec[,default-spec][,related-spec][,field][,type])
+
+3  Parameters
+
+ default-spec
+   This parameter is a file spec which is used to supply missing
+   fields from the first parameter's file spec.
+
+ field
+   This parameter specifies that a particular field from the 
+   specification should be returned.  If no field is specified, 
+   the default is to return the entire expanded file spec.  The 
+   field keywords are as follows:
+
+   NODE         Returns the node name specified.
+   DEVICE       Returns "", the device name.
+   DIRECTORY    Returns the directory specification.
+   NAME         Returns the file name.
+   TYPE         Returns the file type.
+   VERSION      Always returns ";".
+
+ related-spec
+   This parameter is like the default file spec, and is used when
+   a field is not specified in either the first or second parameter.
+
+ type
+   This parameter controls what sort of parsing to do.  If this
+   parameter is not specified, the default is to check any directory
+   specification to see if it is an existing path.  If you specify
+   the keyword SYNTAX_ONLY, no path checking is done.  The NO_CONCEAL
+   keyword is accepted but ignored.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$PARSE("[usr.accelr8]accelr8.dat",,,"type")
+       .dat
+
+     The F$PARSE lexical function returns the file type portion of
+     the given file-spec.
+
+3  Implementation_Differences
+
+   Version numbers are not supported, and are always ignored.
+   The NO_CONCEAL type is not supported, but is also ignored.
+   The device name field is meaningless and returns an empty string.
+
+2  F$SEARCH
+
+   The F$SEARCH function returns the name of an existing file
+   which matches the file-spec parameter.  If wildcard characters exist 
+   in the file-spec, a list of matching file names are displayed on 
+   successive calls to F$SEARCH, which returns an empty string when 
+   no more files match.  If the user does not specify the optional 
+   stream-id parameter, successive calls to F$SEARCH with differing 
+   file specifications will reset the list.
+
+   Format: 
+
+     F$SEARCH(file-spec[, stream-id])
+
+3  Parameters
+
+ file-spec
+   This is the file specification to search for.  A null string is
+   returned if no files exist which match the given file-spec.
+
+ stream-id
+   This positive integer, when specified, allows the user to have 
+   multiple F$SEARCH lists open simultaneously, when each file-spec
+   has a different id.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$SEARCH("*.c", 1)
+       accelr8.c
+
+     The F$SEARCH function returns the next file in stream 1 which
+     matches the file spec *.c.
+
+3  Implementation_Differences
+
+   File names are lowercase, not uppercase, by default.  Uppercase
+   filenames should be quoted, e.g. """*.C""".
+
+2  F$STRING
+
+   The F$STRING function returns the string equivalent of
+   the given integer expression.
+
+   Format: 
+
+     F$STRING(integer)
+
+3  Parameters
+
+ integer
+   This is an expression which F$STRING gets the integer value of and
+   converts to a string.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$LENGTH(F$STRING(1234 + 7654))
+       4
+
+     The F$STRING function returns the string equivalent of the,
+     result of the given expression ("8888"), which is passed to
+     the string length function F$LENGTH.
+
+2  F$TIME
+
+   The F$TIME lexical function returns the current system time.
+
+   Format: 
+   
+     F$TIME()
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$TIME()
+       8-AUG-1988 08:08:08
+
+     The F$TIME lexical function returns the current system time.
+
+3  Implementation_Differences
+
+   The time string is truncated after the seconds field.
+
+2  F$TRNLNM
+
+   The F$TRNLNM lexical function provides a more flexible logical
+   name handler than the now-obsolete F$LOGICAL.  The first parameter 
+   is the logical name to be translated, just as in F$LOGICAL.  The 
+   five optional parameters are discussed below, and are used to 
+   control the type of translation done and the type of return value.
+   If no translation exists for a given logical name, a null string 
+   is returned.
+
+   Format:
+
+     F$TRNLNM(logical-name[,table-name][,index][,mode][,case],[item])
+
+3  Parameters
+
+ case
+   This character expression controls whether upper and lower
+   case in the logical name should be treated as the same.  Use
+   the keyword CASE_SENSITIVE to distinguish case, CASE_BLIND to
+   ignore it.  CASE_BLIND is the default.
+
+ index
+   This integer expression is the desired equivalence name number of
+   a logical name with multiple equivalences.  The index is an offset
+   from the first equivalence name, whose index is zero.
+
+ item
+   This character expression can override the default translation 
+   action which is to return a string with the found equivalence 
+   name.  The item codes available are as follows:
+
+   CONCEALED  returns TRUE if the CONCEALED translation attribute is 
+              set
+ 
+   CONFINE    returns TRUE if the CONFINE translation attribute is set
+
+   CRELOG     returns TRUE if the name was created with $CRELOG
+
+   LENGTH     returns the string length of the equivalence name
+
+   MAX_INDEX  returns the index of the last equivalence name
+
+   NO_ALIAS   returns TRUE if the NO_ALIAS translation attribute is
+              set 
+
+   TABLE      returns TRUE if the logical name is a logical name table
+
+   TABLE_NAME returns the name of the table where the logical-name 
+              resides
+
+   TERMINAL   returns TRUE if the TERMINAL translation attribute is set
+
+   VALUE      returns the equivalence name (default)
+
+ logical-name
+   This string expression is the only required parameter and is
+   the logical name to translate.
+
+ mode
+   This string expression, when specified, must be one of
+   the keywords USER, SUPERVISOR, EXECUTIVE, or KERNEL.
+   Note that the keyword is ignored.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$TRNLNM("SYS$OUTPUT")
+       /dev/console
+
+     The F$TRNLNM lexical function returns the first translation
+     of the logical name SYS$OUTPUT.
+
+3  Implementation_Differences
+
+   Access modes are not implemented, so the mode parameter is only
+   checked for validity.
+
+   Item codes not listed above are not implemented and will return
+   the string "UNKNOWN" when used.
+
+2  F$TYPE
+
+   The F$TYPE lexical function returns the type of value associated
+   with a given symbol name, STRING or INTEGER.  A string symbol 
+   which contains text which could be interpreted as a numeric value 
+   will return INTEGER.  A null string is returned if the symbol 
+   name given is undefined.
+
+   Format:
+
+     F$TYPE(symbol-name)
+
+3  Parameters
+
+ symbol-name
+   This is the name of the symbol to find the type of.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$TYPE($STATUS)
+       INTEGER
+
+     The F$TYPE lexical function returns the type of the permanent
+     global symbol $STATUS.
+
+3  Implementation_Differences
+
+   An environment symbol name may be specified.
+
+2  F$USER
+
+   The F$USER lexical function returns the UIC string for the
+   current user.
+
+   Format:
+
+     F$USER()
+
+3  Examples
+   1.  $ WRITE SYS$OUTPUT F$USER()
+       [users,accelr8]
+
+     The F$USER lexical function returns the UIC for the current user.
+
+2  F$VERIFY
+
+   The F$VERIFY lexical function returns the current procedure
+   verification mode, 0 for off or 1 for on.  In addition, if one or both
+   optional parameters are specified, the current verification mode is
+   changed according to the value specified.
+
+   Format: 
+
+     F$VERIFY([procedure-value][,[image-value]])
+
+3  Parameters
+
+ image-value
+   If the image-value parameter evaluates to a true value, image
+   verification is turned on.  Otherwise, it is turned off.
+
+ procedure-value
+   As with the image-value parameter, true values enable procedure
+   verification, false values disable it.
+
+3  Examples
+
+   1.  $ WRITE SYS$OUTPUT F$VERIFY(1)
+       0
+
+     The F$VERIFY lexical function indicates that procedure verification
+     was off, and turns on procedure verification because 1 is a true
+     value. 
+limit/          914018427   128   100   100664  2043      `
+1  Limitations
+
+   Open DCL Lite contains just a fraction of the features available in
+   the commercial Open DCL product, but it is still a useful emulation
+   of VMS DCL which can make a new operating system seem much friendlier
+   to those who have grown accustomed to the VMS environment.  This help
+   category describes some of the limitations which should be taken into
+   account when using this "lite" product.
+
+2  Logical Names
+
+   Accelr8's commercial VMS emulation products provide shared logical name
+   tables equivalent to those found in VMS.  For example, there are
+   group-wide tables and job-wide tables, and there is a system-wide table.
+   Open DCL Lite does not have this sharing mechanism.  All logical names
+   are stored in memory which is local to the process.  For this reason
+   the LNM$SYSTEM and LNM$GROUP logical name tables are not available,
+   and the LNM$JOB and LNM$PROCESS tables can be considered equivalent.
+
+2  Programs
+
+   Open DCL Lite does not provide the RUN command, but does allow the
+   execution of external scripts and programs through the use of the
+   SHELL command.  In the default configuration any commands which are
+   not recognized as DCL commands are also passed on to the underlying
+   operating system for execution.  This allows easy mixing of DCL and
+   native commands.  Commands excuted in this way have no method by which
+   to alter the DCL environment.
+
+   In the commercial DCL product the RUN command supports symbol management
+   through LIB$GET_SYMBOL and related routines, as well as shared access
+   to logical names and support for 32-bit exit status codes (most flavors
+   of Unix, for example, only support an 8-bit exit status).
+
+2 RMS Files
+
+   Open DCL Lite can only interpret files which are in the standard text
+   file format (on Unix/Linux, this means lines are terminated with a linefeed
+   character).  There is no support for "indexed" or "relative" files.  The
+   commercial version of Open DCL provides support for a wide range of file
+   organizations.
+
+
+logout/         914018427   128   100   100664  842       `
+1  LOGOUT
+
+   The LOGOUT command is used to exit dcl, optionally with
+   a report on process statistics.
+
+   Format: 
+
+     LOGOUT
+
+2  Qualifiers
+
+/BRIEF
+
+      /BRIEF(default)
+
+   Displays a short logout message containing user name and current time.
+
+/FULL
+
+   Displays a summary of process usage statistics before exiting.
+
+2  Examples 
+
+   1.  $ LOGOUT/FULL
+
+       bozo         logged out at  1-APR-1991 04:01:00
+
+       Accounting information:
+
+       Block I/O count:      10      Peak working set size:  64
+       Page faults:          23      Process swaps:          14
+       Charged CPU time: 0:10:20.31  Elapsed time:   1:02:03.04        
+
+2  Implementation_Differences 
+
+   Some of the accounting information may not be available on certain
+   platforms.  When a statistic is not supported, a zero is displayed
+   for that item.
+on/             914018427   128   100   100664  1293      `
+1  ON
+
+   The ON command controls the handling of errors and interrupt
+   key presses while a command procedure is executing.  The 
+   default conditions which are set up at the start of a new 
+   command procedure level are:
+
+   ON WARNING THEN CONTINUE
+   ON ERROR THEN EXIT
+   ON SEVERE_ERROR THEN EXIT
+   ON CONTROL_Y THEN STOP
+
+   If the SET NOON command has been used, no ON actions are taken, 
+   default or otherwise.
+
+   Format: 
+
+     ON condition THEN [$] command
+
+2  Parameters
+
+ condition
+   Determines the severity level of an error.  There are four keywords.
+   They are:
+   WARNING      Severity level 0.
+   ERROR        Severity level 2.
+   SEVERE_ERROR Severity level 4.
+   CONTROL_Y    A CTRL/Y entered.
+
+ command
+   Indicates the DCL command line that is to be executed.  The 
+   dollar sign [$] is optional as a preceding character.
+   
+2  Examples 
+
+   1.  $ ON WARNING THEN EXIT
+
+     The ON command changes the default handling of warning level 
+     conditions to EXIT.  This means that any level error condition
+     will terminate the current command procedure.
+
+2  Implementation_Differences
+
+   The ONCOMD and ONOVF conditions, both triggered when certain limits
+   are reached, are not supported.  The corresponding limitations do 
+   not exist in this product.
+
+
+recall/         914018427   128   100   100664  992       `
+1  RECALL
+
+   The RECALL command retrieves a previously typed command 
+   line.  If the string argument is a numeric value, the 
+   command line typed that many lines ago is retrieved.  If 
+   the string argument is not a numeric value it is considered
+   a substring from the desired command line and is searched
+   for.  Omitting the string argument retrieves the most 
+   recently saved line.
+
+   Format: 
+
+     RECALL [string]
+
+2  Parameters
+
+ [string]
+   The beginning text of a line currently stored in the recall buffer.
+   If no string is entered then RECALL will retrieve the most recently
+   entered command.
+
+2  Qualifiers 
+
+/ALL
+
+   Specifies that instead of searching for a given string, the 
+   command should display a list of all currently saved lines.
+       
+/ERASE
+
+   Deletes any lines contained in the recall buffer.
+
+2  Examples 
+
+   1.  $ RECALL
+       $ dir
+
+     The RECALL command retrieves the most recently typed line for
+     editing and use at the command line.
+rename/         914018427   128   100   100664  2492      `
+1  RENAME
+
+   The RENAME command changes the name(s) of the given file(s).
+   If any portion of the output filespec is omitted or wild-carded, 
+   the corresponding field from the input spec is used.
+
+   Format:
+
+     RENAME input-spec[,...] output-spec
+
+2  Parameters
+
+ input-spec[,...]
+   Is the name of one or more files to be renamed.  Wildcards may be
+   used.
+
+ output-spec
+   Is the new name to be applied to the input-spec.
+
+2  Qualifiers 
+
+/BEFORE 
+
+      /BEFORE[=date]
+
+   Specifies that only files dated earlier than the given time should
+   be selected.  The default is TODAY.
+
+/BY_OWNER
+
+
+      /BY_OWNER[=uic]
+
+   Specifies that only files owned by a particular user should be
+   selected.  The default is the UIC of the current user.
+
+/CONFIRM
+
+      /CONFIRM
+      /NOCONFIRM (default)
+
+   This qualifier causes the RENAME command to prompt the user
+   to confirm the action for each file matching the spec.  Affirmative
+   responses are YES, TRUE, and 1.  Negative responses are NO, FALSE,
+   0, the ctrl-Z key, and pressing return.  Specifying ALL will suppress
+   the confirmation prompt for all remaining files.
+
+/CREATED
+
+      /CREATED (default)
+
+   Specifies that the creation (status changed) date should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/EXCLUDE
+
+      /EXCLUDE=(filespec[,...])
+
+   Specifies that files matching the given filespec(s) should not
+   be selected.
+
+/LOG
+
+      /LOG
+      /NOLOG (default)
+
+   Controls whether an informational message is displayed for each file
+   as it is renamed.
+
+/MODIFIED
+
+   Specifies that the date of last modification should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/NEW_VERSION
+
+      /NEW_VERSION
+      /NONEW_VERSION (default)
+
+   Specifies whether RENAME should overwrite an existing file.
+   The default, /NONEW_VERSION, specifies that it is an error to
+   rename a file to a filename which already exists.
+
+/SINCE
+
+      /SINCE[=date]
+
+   Specifies that only files dated later than the given time should
+   be selected.  The default is TODAY.
+
+2  Examples 
+
+   1.  $ RENAME accelr8.txt accelr8.dat
+
+     The RENAME command renames the file accelr8.txt to accelr8.dat.
+
+2  Implementation_Differences 
+
+   The /CREATED qualifier selects by the date of last status change,
+   not creation.  UNIX does not store creation dates.
+
+return/         914018427   128   100   100664  651       `
+1  RETURN
+
+   The RETURN command transfers command procedure execution to
+   immediately after the most recent GOSUB command, if any.  If 
+   an expression is specified as a parameter, its integer value 
+   is used as a return status which is stored in the $STATUS
+   global variable.
+
+   Format: 
+
+     RETURN [expression]
+
+2  Parameters
+
+ [expression]
+   A string or integer expression which evaluates to a value to use
+   for a return status.
+   
+2  Examples  
+
+   1.  $ RETURN 12
+       %SYSTEM-F-ACCVIO, access violation
+
+     The RETURN command returns a status code of 12 and returns to 
+     the line following the last GOSUB command, if any.
+
+search/         914018427   128   100   100664  5920      `
+1  SEARCH
+
+   The SEARCH command searches the given file(s) for the given
+   string(s).  The default file specification for omitted fields is "*.*".
+   Enclose the string(s) to match in quotation marks if they contain any
+   characters other than lowercase letters and digits.
+
+   Format: 
+
+     SEARCH file-spec[,...] match-string[,...]
+
+2  Parameters
+
+ file-spec[,...]
+   Indicates one or more files to be searched. If more than one file
+   is specified, then separate them with commas (,).  Wildcards are
+   acceptable.
+
+ match-string[,...]
+   The string that is to be located.  If the string has blanks or
+   uppercase letters, put it in double quotes (" ").
+  
+2  Qualifiers 
+
+/BEFORE
+
+      /BEFORE[=date]
+
+   Specifies that only files dated earlier than the given time should
+   be selected.  The default is TODAY.
+
+/BY_OWNER
+
+      /BY_OWNER[=uic]
+
+   Specifies that only files owned by a particular user should be
+   selected.  The default is the UIC of the current user.
+
+/CONFIRM
+
+      /CONFIRM
+      /NOCONFIRM (default)
+
+   This qualifier causes the SEARCH command to prompt the user
+   to confirm the action for each file matching the spec.  Affirmative
+   responses are YES, TRUE, and 1.  Negative responses are NO, FALSE,
+   0, the ctrl-Z key, and pressing return.  Specifying ALL will suppress
+   the confirmation prompt for all remaining files.
+
+/CREATED
+
+      /CREATED (default)
+
+   Specifies that the creation (status changed) date should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/EXACT
+
+      /EXACT
+      /NOEXACT (default)
+ 
+   Specifying /EXACT causes the search to be case sensitive for
+   letters.  The default is case insensitive.
+
+/EXCLUDE
+
+      /EXCLUDE=(filespec[,...])
+
+   Specifies that files matching the given filespec(s) should not
+   be selected.
+
+/FORMAT
+
+      /FORMAT=DUMP
+      /FORMAT=NOFF
+      /FORMAT=NONULLS
+      /FORMAT=PASSALL
+      /FORMAT=TEXT
+ 
+   Specifies the format in which to output text.  DUMP causes
+   all control characters to be output as mnemonic representations.
+   NONULLS is very similar to DUMP, but strips out null characters.
+   NOFF and TEXT are also similar to DUMP, but pass through
+   tab, carriage return, and line feed characters.  In addition,
+   TEXT passes the form feed character through.  PASSALL causes
+   all characters to be passed through with no interpretation.
+   The default is TEXT is /FORMAT is not specified.
+
+/HEADING
+
+      /HEADING (default)
+      /NOHEADING
+
+   The /HEADING qualifier specifies that when the file specification
+   contains a wildcard, or when there is a list of files, a header
+   consisting of 30 asterisk characters and the file name should
+   be displayed to separate the files.  The header is suppressed
+   by the /NOHEADING qualifier.
+
+/HIGHLIGHT
+
+      /HIGHLIGHT
+      /HIGHLIGHT=BLINK
+      /HIGHLIGHT=BOLD
+      /HIGHLIGHT=REVERSE
+      /HIGHLIGHT=UNDERLINE
+      /NOHIGHLIGHT (default for non-terminal output)
+
+   The /HIGHLIGHT qualifier specifies how to represent matches when
+   output is to the terminal.  The default is BOLD if the current
+   terminal type supports it, REVERSE otherwise.  For some terminals,
+   REVERSE and UNDERLINE have the same result.  The /NOHIGHLIGHT
+   qualifier suppresses highlighting.
+
+/LOG
+
+      /LOG
+      /NOLOG (default)
+
+   Controls whether a report of the number of matches per file should
+   be generated.  The default, /NOLOG, does not report the number
+   of matches.
+
+/MATCH
+
+      /MATCH=AND
+      /MATCH=NAND
+      /MATCH=NOR
+      /MATCH=OR (default)
+
+   Specifies what combinations of matching strings to accept when
+   a list of strings is specified.  For AND, the record must contain
+   all of the strings to match.  For NAND, the record must not contain
+   all of the strings.  NOR requires that the record contain none
+   of the strings.  OR, the default, specifies that records containing
+   one or more of the strings will match.
+
+/MODIFIED
+
+   Specifies that the date of last modification should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/NUMBERS
+
+      /NUMBERS
+      /NONUMBERS (default)
+
+   When /NUMBERS is specified, the line number of each record is
+   output to the left of each line output by SEARCH.
+
+/REMAINING
+
+     /REMAINING
+     /NOREMAINING (default)
+
+   When /REMAINING is specified, it suppresses normal handling of
+   windows.  All records after the first match are displayed, with
+   the only /WINDOW handling being the upper half of the window
+   for the first match.  
+
+/SINCE
+
+      /SINCE[=date]
+
+   Specifies that only files dated later than the given time should
+   be selected.  The default is TODAY.
+
+/WINDOW
+
+      /WINDOW[=(n1[,n2])]
+      /NOWINDOW (default)
+
+   Specifies how many records above and below each match to output
+   as a window.  Specifying /WINDOW alone is equivalent to
+   /WINDOW=(2,2).  Specifying /WINDOW with both n1 and n2 causes
+   the values to be interpreted as how many records above and
+   below to display, respectively.  If /WINDOW is specified with
+   one value, it is taken to be the size of the entire window,
+   including the search string.  Specifying /WINDOW=0 causes
+   the file name to be displayed, but not the matched record.
+
+2  Examples 
+
+   1.  $ SEARCH/NOHIGHLIGHT/EXACT PRESIDENTS.DAT "Grover"
+       Grover Cleveland
+
+     The SEARCH command searches the file presidents.dat for the string
+     Grover, and displays records matching the string.
+
+2  Implementation_Differences 
+
+   This command is not restricted to text files, but it does have
+   two limitations on the types of files accepted.  The file must
+   be of variable length (stream-line feed) format, and records must
+   be no larger than 32 kilobytes, the RMS limit.  Text files typically
+   do meet these limitations.
+set/            914018427   128   100   100664  13390     `
+1  SET
+
+   Defines or changes characteristics associated with files or 
+   devices used by the process.
+
+2  CLI
+   The SET CLI command tailors certain actions of the command
+   interpreter.
+
+   Format: 
+
+     SET CLI
+
+3  Qualifiers
+
+/CTRLJ
+
+      /CTRLJ
+      /NOCTRLJ
+
+   Controls whether DCL interprets a CTRL-J key as a line editing
+   character (/CTRLJ) or as a line terminator (/NOCTRLJ).  The default
+   is /CTRLJ.
+
+/LOWERCASE
+ 
+      /LOWERCASE
+      /NOLOWERCASE
+
+   Controls whether command lines are mapped to upper or lower case.
+   By default, Open DCL maps command lines to lower case (/LOWERCASE)
+   for greater file compatibility on open systems.  Currently the
+   lowercase mode is recommended because Open DCL uses lowercase defaults
+   when constructing file specifications.
+
+/PASSTHRU
+ 
+      /PASSTHRU
+      /NOPASSTHRU
+
+   Controls whether unknown verbs are treated as Unix commands and
+   passed on to the native shell.  If you do not specify either
+   /PASSTHRU or /NOPASSTHRU, the handling of unknown verbs is not
+   changed.  The default when the CLI starts up is /PASSTHRU.
+
+/REDIRECTION
+ 
+      /REDIRECTION=keyword
+
+   Controls what happens when DCL file redirection (for example,
+   changing the translation of SYS$OUTPUT) is used to output to
+   an existing file, due to the lack of version numbering.  The
+   default is /REDIRECTION=APPEND, which appends new data to the
+   existing file.  The keywords available are:
+
+   Keyword         Action
+ 
+   ABORT           Generate an error if redirecting to an existing file.
+
+   APPEND          Append redirected output to existing files.
+
+   OVERWRITE       Overwrite existing files with redirected output.
+
+/UNSUPPORTED
+
+      /UNSUPPORTED=keyword
+
+   Controls what action is taken when an unsupported qualifier
+   is used, according to the keyword specified.  The keywords
+   available are:
+
+   Keyword         Action
+ 
+   IGNORE          Unsupported qualifiers are ignored.
+
+   INFORM          The user is informed when an unsupported
+                   qualifier is used, but the command still executes.
+
+   ERROR           An error of E-level severity is generated
+                   when an unsupported qualifier is used.
+
+   The default when the CLI starts up is /UNSUPPORTED=INFORM.
+   If you do not specify the /UNSUPPORTED qualifier, the current
+   handling of unsupported qualifiers is retained.
+
+/UPPERCASE
+ 
+      /UPPERCASE
+      /NOUPPERCASE
+
+   Controls whether command lines are mapped to upper or lower case.
+   By default, Open DCL maps command lines to lower case (/NOUPPERCASE)
+   for greater file compatibility on open systems.  Currently the
+   lowercase mode is recommended because Open DCL uses lowercase defaults
+   when constructing file specifications.
+
+/VMSDOT
+ 
+      /VMSDOT
+      /NOVMSDOT
+
+   Controls how file names beginning with a dot (.) are treated.  By
+   default (/NOVMSDOT), such names are treated as file names rather
+   than file types for more Unix compatibility.  By using the /VMSDOT
+   qualifier, this behavior can be changed to be more VMS-like.
+
+3  Examples 
+
+   1.  $ SET CLI/NOPASSTHRU/UNSUPPORTED=ERROR
+
+     The SET CLI command sets up the CLI to generate an error when an
+     unknown verb or unsupported qualifier is used.
+
+2  DEFAULT
+   The SET DEFAULT command defines the current default directory
+   or search list specification.
+
+   Format:
+
+     SET DEFAULT [device-name[:]][directory-spec]
+
+3  Parameters
+
+ [device-name[:]]
+   Is the name of the device that you want to go to.
+
+ [directory-spec]
+   Is the name of the directory that you want to go to.  Directory
+   names need to be in ([]).  The minus sign can be used to go up 
+   one level in the directory structure.
+
+3  Examples 
+
+   1.  $ SET DEFAULT SYS$LOGIN
+
+     The SET DEFAULT command deassigns any previous search list in
+     the default spec, and sets the default directory to be the
+     equivalence for the logical name SYS$LOGIN.
+
+3  Implementation_Differences
+
+   In VMS, the default file specification includes a device name.
+   This functionality is meaningless in the Unix file system
+   structure, and is not required or supported.  If the device
+   name given to this command refers to a logical name search list,
+   the search list will be used by commands such as DIRECTORY as
+   is the case on a VMS system.
+
+   In VMS, when the device-name portion of the default spec is a search
+   list, the search list is only overridden when a device name or
+   another search list is specified in a new SET DEFAULT command.
+   Since there is no device name in DCL specifications, any logical
+   name given to SET DEFAULT as a device name will deassign the
+   search list.
+
+2  ON
+   The SET ON command enables (ON) or disables (NOON) the
+   command procedure error handler, which is the mechanism which 
+   exits a procedure on an error or handles a specified ON command.
+   Note that this command only affects the current procedure level, 
+   and that SET ON is the default for new command procedure levels.
+
+   Format: 
+
+     SET [NO]ON
+
+3  Examples 
+
+   1.  $ SET NOON
+
+     The negated SET ON command turns off the command procedure error
+     handler at this procedure level.
+
+3  Implementation_Differences
+
+2  PROMPT
+   The SET PROMPT command changes the prompt string used at
+   the command line.
+
+   Format: 
+
+     SET PROMPT[=prompt-string]
+
+3  Parameters
+
+ [=prompt-string]
+   Indicates the new prompt string.  Can be up to 32 characters.
+
+3  Examples 
+
+   1.  $ SET PROMPT="accelr8 $> "
+       accelr8 $>
+
+     The SET PROMPT command changes the command line prompt.
+
+3  Implementation_Differences
+
+   The /CARRIAGE_CONTROL functionality is not supported due to
+   differences in the handling of Unix output.
+
+2  TERMINAL
+   The SET TERMINAL command changes the user's current
+   terminal state.
+
+   Format: SET TERMINAL
+
+3  Qualifiers
+
+/ADVANCED_VIDEO
+
+      /ADVANCED_VIDEO
+      /NOADVANCED_VIDEO
+
+   Specifies that the terminal is capable of 132-column display.
+
+/ANSI_CRT
+
+      /ANSI_CRT
+      /NOANSI_CRT
+
+   Specifies that the terminal responds correctly to ANSI standard
+   escape sequences.
+
+/APPLICATION_KEYPAD
+
+   Sets the terminal to use its application keypad definition, if any.
+
+/BROADCAST
+
+      /BROADCAST
+      /NOBROADCAST
+
+   Specifies whether messages broadcast from other users should be
+   received.  Note that the root (system administrator) user is permitted
+   to send messages to all terminals, even if /NOBROADCAST is used.
+   The default is system-dependent.
+
+/CRFILL
+
+      /CRFILL[=count]
+
+   Specifies how many null characters should be output after a
+   carriage return.  The default is zero.  The count must
+   be in a range from 0 to 3.  Note that VMS DCL allows a range of
+   0 to 9, but Unix does not.
+
+/DEC_CRT
+
+      /DEC_CRT[=(value, ..., value)]
+      /NODEC_CRT[=(value, ..., value)]
+
+   Specifies that the terminal is (or is not with /NODEC_CRT) compliant
+   with Digital Equipment Corporation's vt100, vt200, vt300, and vt400
+   standards.  Specify 1 for vt100, 2 for vt200, 3 for vt300, and
+   4 for vt400.  Remember that each later standard is a superset of
+   previous standards, and so there is no such thing as a terminal
+   which complies with vt400 and not vt100, for example.
+
+/DEVICE_TYPE
+
+      /DEVICE_TYPE=terminal-name
+
+   Specifies that defaults should be set up as appropriate for the
+   terminal type specified.  Terminal types not recognized by
+   Unix are treated as the UNKNOWN device type.
+
+/DIALUP
+
+      /DIALUP
+      /NODIALUP
+
+   Specifies that the current terminal line should provide modem 
+   control. The default is system-dependent.
+
+/DISMISS
+
+      /DISMISS
+      /NODISMISS
+
+   Specifies that characters with parity errors should be ignored,
+   or not ignored if /NODISMISS is specified.  The default is
+   system-dependent.
+
+/ECHO
+
+      /ECHO (default)
+      /NOECHO
+
+   Specifies that characters received by the user should be
+   echoed.  Specifying /NOECHO results in only DCL output being
+   sent to the user.
+
+/EDIT_MODE
+
+      /EDIT_MODE
+      /NOEDIT_MODE
+
+   Specifies that the terminal is capable of advanced editing
+   escape sequences.  The default is terminal-type dependent.
+
+/EIGHT_BIT
+
+      /EIGHT_BIT
+      /NOEIGHT_BIT
+
+   Specifies that the most significant bit of characters is significant
+   and should not be discarded.  The default is system-dependent.
+
+/INSERT
+
+   Specifies that insertion mode should be used for command line
+   editing.  This means that characters typed before the end of the
+   line push the remaining characters to the right.  The ctrl-A key
+   will toggle the editing mode.
+
+/LFFILL
+
+      /LFFILL[=count]
+
+   Specifies how many null characters should be output after a
+   line feed character.  The default is zero.  The count must
+   be in a range from 0 to 1.  Note that VMS DCL allows a range of
+   0 to 9, but Unix does not.
+
+/LINE_EDITING
+
+      /LINE_EDITING (default)
+      /NOLINE_EDITING
+
+   Controls whether escape sequences and ctrl-Z are recognized.
+
+/LOCAL_ECHO
+
+      /LOCAL_ECHO
+      /NOLOCAL_ECHO (default)
+
+   Specifies that the user's terminal echoes the data it transmits,
+   making DCL's echoing unnecessary.  This is the opposite of
+   the /ECHO qualifier in this implementation.
+
+/LOWERCASE
+
+      /LOWERCASE (default)
+      /NOLOWERCASE
+
+   Specifies whether lower case characters should be sent to the
+   terminal.  Specifying /NOLOWERCASE maps all lowercase characters
+   to uppercase on output.
+
+/NUMERIC_KEYPAD
+
+      /NUMERIC_KEYPAD (default)
+
+   Sets the terminal to use its default numeric keypad definition,
+   if any.
+
+/OVERSTRIKE
+
+      /OVERSTRIKE (default)
+
+   This qualifier is the opposite of /INSERT, and causes a character
+   to be overwritten when another character is typed at the same
+   position in the command line.
+
+/PAGE
+
+      /PAGE[=lines]
+
+   Specifies the length of an output page, which is the screen size
+   in rows.  The allowed range is 0 to 255, and the default is
+   0, which treats the screen as having 24 lines.
+   
+/PARITY
+
+      /PARITY[=parity-type]
+      /NOPARITY
+
+   Specifies the parity to expect for input data.  The allowable
+   types are NONE, EVEN, and ODD.  The default is system-dependent.
+
+/PASTHRU
+
+      /PASTHRU
+      /NOPASTHRU (default)
+
+   When /PASTHRU is specified, no control characters are interpreted
+   as special by the terminal driver.  Use /PASTHRU with caution.
+
+/SET_SPEED
+
+      /SET_SPEED (default)
+      /NOSET_SPEED
+
+   Controls whether the user is permitted to change terminal speed
+   with the /SPEED qualifier.
+
+/SPEED
+
+      /SPEED=rate
+
+   Sets the input and output rate, in bits per second.  Note that
+   the input and output rate must be the same, unlike VMS, and that
+   therefore a list of values is not allowed.  The allowable speed
+   values are: (note that some obscure VMS-legal rates are illegal):
+
+   50        110     150      600      1800     4800     19200
+   75        134     300      1200     2400     9600
+
+/TAB
+
+      /TAB (default)
+      /NOTAB
+
+   When /TAB is specified, tab characters are output as tab characters.
+   When /NOTAB is specified, tab characters are output as blanks.
+
+/TTSYNC
+
+      /TTSYNC (default)
+      /NOTTSYNC
+
+   Specifies that ctrl-S and ctrl-Q will pause and resume output, or 
+   will not if /NOTTSYNC is specified.
+
+/UNKNOWN
+
+   Specifies that the terminal should be set up as if it were
+   unknown to the system.
+
+/UPPERCASE
+
+      /UPPERCASE
+      /NOUPPERCASE
+
+   This is the opposite of the /LOWERCASE qualifier.  Specifying
+   /NOLOWERCASE is the same as specifying /UPPERCASE.
+
+/WIDTH
+
+      /WIDTH=characters
+
+   Specifies a new width for the terminal, in characters.  If
+   132 is specified and the terminal has ADVANCED_VIDEO capability,
+   the terminal is set to 132-column mode.
+
+/WRAP
+
+      /WRAP (default)
+      /NOWRAP
+
+      Specifies whether a carriage return should be output at the
+      end of a terminal line.  Specifying /NOWRAP causes text to
+      be output with no regard for the terminal width.
+
+3  Examples 
+
+   1.  $ SET TERMINAL/NOBROADCAST/LOWERCASE
+
+     The SET TERMINAL command disables broadcast messages from other
+     users and enables the display of lowercase characters.
+
+3  Implementation_Differences
+
+   The device name parameter is not supported.  It is not possible
+   to set up another user's terminal remotely in Unix.
+
+   The device type qualifier is not checked for validity.  It must
+   be a terminal type which Unix knows or it will work the same
+   as specifying the /UNKNOWN qualifier.
+
+   See the above qualifier descriptions for more information.
+
+2  VERIFY
+   The SET VERIFY command enables or disables image and/or procedure
+   verification.  If you specify VERIFY or NOVERIFY alone, verification 
+   for both will be enabled or disabled, respectively.  Specifying one 
+   or both keywords allows more flexibility in setting the verification
+   mode.
+
+   Format: 
+
+     SET [NO]VERIFY[=([NO]IMAGE,[NO]PROCEDURE)]
+
+3  Parameters
+
+ [NO]IMAGE
+   Specifying IMAGE or NOIMAGE enables or disables image verification,
+   respectively, without changing the procedure verification mode.
+
+ [NO]PROCEDURE
+   Specifying PROCEDURE or NOPROCEDURE enables or disables procedure
+   verification, respectively, without changing the image verification
+   mode.
+
+3  Examples  
+
+   1.  $ SET VERIFY
+
+     The SET VERIFY command enables image and procedure verification.
+shell/          914018427   128   100   100664  697       `
+1  SHELL
+
+   The SHELL command allows use of a command native to the
+   host's operating system, or to the user's shell.  Note 
+   that normal DCL symbol substitution is performed on the 
+   line before it is passed to the shell.  Note, this is 
+   an Accelr8 enhancement.
+
+   Format: 
+
+     SHELL unix-command
+
+2  Parameters
+
+ unix-command
+   Any legal UNIX command on the current system.  Note that the
+   apostrophe (') character is meaningful to DCL and will not be
+   passed on to UNIX.
+
+2  Examples 
+
+   1.  $ SHELL ls 'SHELL'
+       /bin/sh
+
+     Assuming the symbol SHELL has a value of "/bin/sh", the SHELL
+     command passes the command "ls /bin/sh" to a UNIX shell for
+     execution.
+
+show/           914018427   128   100   100664  9943      `
+1  SHOW
+
+   Displays information on the current status of a process, system,
+   or device.
+
+2  CLI
+   The SHOW CLI command displays the current status of the command
+   interpreter, as set by the SET CLI command or by default.
+
+   Format: 
+
+     SHOW CLI
+
+3  Qualifiers 
+
+/VERSION
+
+   Overrides the normal report and instead displays the current
+   version and serial number of the product.
+
+3  Examples 
+
+   1.  $ SHOW CLI
+       Passing unknown commands to shell
+       Using UNIX dotfile interpretation
+       Informing user when unsupported qualifiers are used
+       Output redirection appends to existing files
+       Mapping command lines to lower case
+       Control-J is a line editing character
+       Using native (decimal) process ids
+       DIRECTORY/DATE default is the date of last status change
+
+     The SHOW CLI command displays the current state of the DCL
+     command interpreter.
+
+2  DEFAULT
+   The SHOW DEFAULT command displays the current default directory
+   and search list, if any.
+
+   Format: 
+
+     SHOW DEFAULT
+
+3  Examples 
+
+   1.  $ SHOW DEFAULT
+       [user.accelr8]
+
+3  Implementation_Differences
+
+   In VMS, the default file specification includes a device name.
+   This functionality is meaningless in the UNIX file system
+   structure, and is not required or supported.  However, if a device
+   name was set up with the SET DEFAULT command and refers to a
+   logical name search list, the search list will be displayed by
+   the command as in VMS, and commands such as DIRECTORY will
+   use the search list.
+
+2  LOGICAL
+   The SHOW LOGICAL command displays the equivalence strings
+   for the specified logical name.  If you do not specify a logical
+   name the default is *, which matches all logical names.
+
+   Format:
+
+     SHOW LOGICAL [logical-name[,...]]
+
+3  Parameters
+
+ [logical-name[,...]
+   Logical name to translate.  Wild cards are acceptable.
+
+3  Qualifiers 
+
+/ALL
+
+      /ALL (default)
+
+   Specifies that all logical names in the specified tables
+   should be displayed.
+
+/JOB
+
+   Specifies that the job logical name table should be searched
+   for the logical name(s) specified.
+
+/OUTPUT
+
+      /OUTPUT[=file-spec] 
+      /NOOUTPUT
+
+   Controls where the output of the command is to go.  If /NOOUTPUT 
+   is specified, output is suppressed.  If you do not provide a
+   file-spec, the default is SYS$OUTPUT.
+
+/PROCESS
+
+      /PROCESS (default)
+
+   Specifies that the process logical name table should be searched
+   for the logical name(s) specified.
+
+/TABLE
+
+      /TABLE=table-name
+
+   Specifies a user-supplied table name to search for the logical
+   name(s) specified.
+
+3  Examples 
+
+   1.  $ SHOW LOGICAL/PROCESS
+       (LNM$PROCESS)
+
+       "SYS$COMMAND" = "/dev/console"
+       "SYS$ERROR" = "/dev/console"
+       "SYS$INPUT" = "/dev/console"
+       "SYS$OUTPUT" = "/dev/console"
+       "TT" = "/dev/tty"
+
+     The SHOW LOGICAL command displays the contents of the process
+     logical name table.
+
+3  Implementation_Differences
+
+   Access modes are currently not supported, with the exception of
+   process table user mode logical names, which are stored in
+   a special table named LNM$USERMODE.
+
+2  STATUS
+   The SHOW STATUS command displays usage statistics for the
+   current process.  The statistics displayed are blocks input and 
+   output peak working set size, memory in use, and the current 
+   number of process swaps and page faults.
+
+   Format: 
+
+     SHOW STATUS
+
+3  Examples 
+
+   1.  $ SHOW STATUS
+
+       Status on  1-APR-1991 08:08:08   Elapsed CPU:  0:01:02.03
+       Blocks input :   5   Peak ws :   26   Process swaps:  3
+       Blocks output :  4   Phys. Mem : 18   Page Faults :   31
+
+3  Implementation_Differences
+
+   Some of the process information may not be available on certain
+   platforms.  When a statistic is not supported, a zero is 
+   displayed for that item.
+
+2  SYMBOL
+   The SHOW SYMBOL command displays the value for the specified
+   symbol.  You must specify a symbol name or the /ALL qualifier.
+   You may use wildcards in the symbol name to match more than 
+   one symbol.
+
+   Format: 
+
+     SHOW SYMBOL symbol-name
+
+3  Parameters
+
+ symbol-name
+   Name of the symbol whose value you want displayed.  Wild cards 
+   are acceptable.
+
+3  Qualifiers 
+
+/ALL
+
+   Specifies that all symbols in the specified table should
+   be displayed.  If you specify the /ALL qualifier, you cannot
+   specify a symbol name.  If you specify /ALL and do not specify
+   /LOCAL or /GLOBAL, /LOCAL is the default.
+
+/ENVIRONMENT
+
+   Specifies that the symbol should be searched for in the UNIX
+   environment symbol table.
+
+/GLOBAL
+
+   Specifies that the symbol should be searched for in the global
+   symbol table.
+
+/LOCAL
+
+   Specifies that the symbol should be searched for in the local
+   symbol table for the current procedure level.  If you do not
+   specify /LOCAL or /GLOBAL, all active symbol tables are searched,
+   in the order of the current procedure level's local table, 
+   previous procedure level local tables, and finally the global 
+   and UNIX environment tables.
+
+/LOG
+
+      /LOG (default)
+      /NOLOG
+
+   Controls whether an informational message is displayed when a 
+   symbol value is truncated, which happens when it is greater 
+   than 255 characters long.
+
+3  Examples 
+
+   1.  $ SHOW SYMBOL/ALL
+       ACCELR8 = "number"
+       TECHNOLOGY = 1   Hex = 00000001  Octal = 00000000001
+
+     The SHOW SYMBOL command displays all symbols in the local
+     symbol table of the current procedure level.
+
+3  Implementation_Differences
+
+   In addition to the global and local symbol tables, UNIX environment
+   variables are contained in a special environment symbol table.
+   SHOW SYMBOL uses === in its report for environment variables.
+
+2  TERMINAL
+   The SHOW TERMINAL command displays the user's current
+   terminal state.
+
+   Format: 
+
+     SHOW TERMINAL
+
+3  Qualifiers 
+
+/OUTPUT
+
+      /OUTPUT[=file-spec]
+
+   Specifies that the output should be sent to a given file name.
+   The default is SYS$OUTPUT.  If /NOOUTPUT is specified, output
+   is suppressed.
+
+3  Examples 
+
+   1.  $ SHOW TERMINAL
+
+       Terminal console     Device_Type: vt100       Owner: accelr8
+
+       Input:   9600         LFfill:  0    Width: 80     Parity: None
+       Output:  9600         CRfill:  0    Page:  24
+
+       Terminal Characteristics:
+       Interactive       Echo               Type_Ahead      No Escape
+       No Hostsync       TTsync             Lowercase       Tab
+       Wrap              Scope              No Remote       Eightbit
+       Broadcast         No Readsync        No Form         Fulldup
+       No Modem          No Local_echo      No Autobaud     No Hangup
+       No Brdcstmbx      No DMA             No Altypeahd    Set_speed
+       Line Editing      Overstrike editing No Fallback     No Dialup
+       No Secure server  No Disconnect      No Pasthru      No Syspassword
+       No SIXEL graphics No Soft Characters No Printer Port Numeric keypad
+       ANSI_CRT          No Regis           No Block_mode   Advanced_video
+       Edit_mode         DEC_CRT            No DEC_CRT2     No DEC_CRT3
+       No DEC_CRT4
+
+     The SET TERMINAL command displays the current terminal state.
+
+3  Implementation_Differences
+
+   The device name parameter is not supported.  It is not possible
+   to retrieve much information about another user's terminal in UNIX.
+
+   Not all VMS terminal attributes have meaning on a UNIX platform.
+   The attributes supported by this command are:
+
+   Advanced video       Dismiss         Page length
+   ANSI CRT             Echo            Parity
+   Broadcast            Edit_mode       Pasthru
+   CRfill               Eight_bit       Set_speed
+   Device type          Insert          Speed
+   DEC_CRT              Keypad          Tab
+   DEC_CRT2             LFfill          Terminal name
+   DEC_CRT3             Line editing    TTsync
+   DEC_CRT4             Lowercase       Width
+   Dialup               Owner           Wrap
+
+   Any attributes not on the above list are displayed with a 
+   default value.
+
+2  [DAY]TIME
+   The SHOW TIME or SHOW DAYTIME command displays the current
+   day and time.
+
+   Format: 
+
+     SHOW [DAY]TIME
+
+3  Examples 
+
+   1.  $ SHOW TIME
+       1-APR-1991 08:08:08
+
+2  TRANSLATION
+   The SHOW TRANSLATION command displays the first equivalence
+   string known for the given logical name.
+
+   Format: 
+
+     SHOW TRANSLATION logical-name
+
+3  Parameters
+
+ logical-name
+   The logical name with the translation that you want to be
+   displayed.
+
+3  Qualifiers 
+
+/TABLE
+
+      /TABLE=logical-name-table
+
+   Specifies the logical name table where the logical name resides.
+   The default is LNM$FILE_DEV.
+
+3  Examples 
+
+   1.  $ SHOW TRANSLATION SYS$OUTPUT
+       SYS$OUTPUT = "/dev/console"  (LNM$PROCESS)
+
+3  Implementation_Differences
+
+   The name of the default table is LNM$FILE_DEV instead of
+   LNM$DCL_LOGICAL, but these may be considered equivalent.
+
+2  USERS
+   The SHOW USERS command displays who is currently logged in
+   on the system.
+
+   Format: 
+
+     SHOW USERS [user-name]
+
+   Shows all the users currently logged in. 
+
+3  Parameters
+
+ [user-name]
+   The user that you want information on.  Wild cards are acceptable.
+   If user-name is not used then a list of all users is displayed.
+
+3  Qualifiers 
+
+/FULL
+
+   Sets SHOW USERS to display a more verbose report.
+
+/OUTPUT
+
+      /NOOUTPUT
+      /OUTPUT[=file-spec]
+
+   Redirects the output of the command to a file, or suppresses
+   output if /NOOUTPUT is specified.
+
+3  Examples 
+
+   1.  $ SHOW USERS accelr8
+
+       UNIX User Processes at  01-APR-1991 08:08:08
+       Total number of users = 1,  number of sessions = 2
+  
+        Username        Sessions
+        accelr8             2
+
+3  Implementation_Differences
+
+   Active sessions are not broken down into interactive, batch,
+   and subprocesses.
+
+   The /FULL qualifier report has less fields due to differences
+   in what information is kept by UNIX about logins.
+
+subr/           914018427   128   100   100664  269       `
+1  SUBROUTINE
+
+   The SUBROUTINE command marks the beginning of a subroutine
+   for the CALL command.  It performs no action.
+
+   Format: 
+
+     SUBROUTINE
+
+2  Examples
+
+   1.  $ MY_SUB: SUBROUTINE
+
+     The SUBROUTINE command marks the beginning of subroutine MY_SUB.
+
+type/           914018427   128   100   100664  2703      `
+1  TYPE
+
+   The TYPE command displays the files specified by the list
+   of file-specs.  The default file type is .lis for file 
+   specifications where the type is omitted.
+
+   Format: 
+
+     TYPE file-spec[,...]
+
+2  Parameters
+
+ file-spec[,...]
+   One or more files that will be displayed.  Wild cards are allowed.
+   If more than one file is specified, then separate them by commas 
+   (,).
+
+2  Qualifiers
+
+/BEFORE
+
+      /BEFORE[=date]
+
+   Specifies that only files dated earlier than the given time should
+   be selected.  The default is TODAY.
+
+/BY_OWNER
+
+      /BY_OWNER[=uic]
+
+   Specifies that only files owned by a particular user should be
+   selected.  The default is the UIC of the current user.
+
+/CONFIRM
+
+      /CONFIRM
+      /NOCONFIRM (default)
+
+   This qualifier causes the TYPE command to prompt the user
+   to confirm the action for each file matching the spec.  Affirmative
+   responses are YES, TRUE, and 1.  Negative responses are NO, FALSE,
+   0, the ctrl-Z key, and pressing return.  Specifying ALL will suppress
+   the confirmation prompt for all remaining files.
+
+/CREATED
+
+      /CREATED (default)
+
+   Specifies that the creation (status changed) date should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/EXCLUDE
+
+      /EXCLUDE=(filespec[,...])
+
+   Specifies that files matching the given filespec(s) should not
+   be selected.
+
+/MODIFIED
+
+   Specifies that the date of last modification should be used when
+   selecting files with /BEFORE or /SINCE.  This qualifier may not be
+   used unless /BEFORE and/or /SINCE is specified.
+
+/OUTPUT
+
+      /OUTPUT[=file-spec]
+
+   Specifies that output should be sent to the specified file, or
+   suppressed with the /NOOUTPUT qualifier.  This qualifier is
+   incompatible with the /PAGE qualifier.  If portions of the file
+   spec are omitted, the default is type.lis.
+
+/PAGE
+
+      /PAGE
+      /NOPAGE (default)
+
+   Specifies that output should be displayed one screen at a time,
+   prompting the user to press the return key to continue.  This
+   qualifier is incompatible with the /OUTPUT qualifier.
+
+/SINCE
+
+      /SINCE[=date]
+
+   Specifies that only files dated later than the given time should
+   be selected.  The default is TODAY.
+
+2  Examples
+
+   1.  $ TYPE accelr8.txt
+
+     The TYPE command displays the text in the file accelr8.txt.
+
+2  Implementation_Differences
+
+   The /OUTPUT qualifier is only incompatible with /PAGE if a
+   file specification is given.  /OUTPUT by itself is accepted.
+
+   The ctrl-C key causes the TYPE command to exit, rather than
+   proceeding to the next file.  The ctrl-O key does not suppress
+   output.
+
+write/          914018427   128   100   100664  1136      `
+1  WRITE
+
+   The WRITE command writes the given list of expressions
+   to the file which has the given logical name.
+
+   Format: 
+
+     WRITE file-name[:] expression[,...]
+
+2  Parameters
+
+ file-name[:]
+   Is the name of the output file.
+
+ expression[,...]
+   The data that will be written as a record to the output file.
+   
+
+2  Qualifiers
+
+/ERROR
+
+      /ERROR=label
+
+   Branches to the specified label if a file error is encountered
+   during the write operation.  The $STATUS global symbol is
+   updated with the appropriate error condition, but normal error
+   handling is suppressed.
+
+/SYMBOL
+
+   This qualifier specifies that a 2048-byte buffer should be used
+   for the data to output, rather than the default 1024.  This
+   qualifier is ignored because a 2048-byte buffer is always used.
+
+2  Examples
+
+   1.  $ WRITE DATAFILE X," ",Y," ",Z
+
+     The WRITE command writes the values of symbols X, Y, and Z, separated
+     by spaces, to the file named DATAFILE.
+
+2  Implementation_Differences
+
+   A 2048 byte buffer is always used, making the /SYMBOL qualifier
+   unnecessary.
+
+   It is illegal to write to SYS$INPUT, unlike DCL.
